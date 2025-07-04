@@ -131,7 +131,7 @@ body {
     left: 0;
     bottom: 0;
     z-index: 10;
-    transition: width 0.2s cubic-bezier(.4,0,.2,1);
+    transition: width 0.2s cubic-bezier(.4,0,.2,1), padding 0.2s cubic-bezier(.4,0,.2,1);
 }
 
 .sideBar.collapsed {
@@ -181,6 +181,21 @@ body {
     margin: 0;
 }
 
+/* Main content layout (handled by App.css, but for safety) */
+.app-layout {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    /* margin-left is set inline in App.jsx */
+    min-width: 0;
+    background: #f9f9f9;
+    transition: margin-left 0.2s cubic-bezier(.4,0,.2,1);
+}
+
 /* Video list flex */
 .videoList {
     display: flex;
@@ -189,15 +204,10 @@ body {
     padding: 2rem 2rem;
     width: 100%;
     box-sizing: border-box;
-    margin-left: 220px;
     justify-content: flex-start;
     align-items: flex-start;
-    transition: margin-left 0.2s cubic-bezier(.4,0,.2,1);
-}
-
-.sideBar.collapsed ~ .videoList,
-.videoList[style*="margin-left: 72px"] {
-    margin-left: 72px !important;
+    /* Remove margin-left here */
+    transition: none;
 }
 
 /* Video card styles */
@@ -261,12 +271,8 @@ body {
     margin-bottom: 0.08rem;
 }
 
+/* Responsive adjustments */
 @media (max-width: 1100px) {
-    .videoList {
-        gap: 0.7rem;
-        padding: 1rem;
-        margin-left: 72px;
-    }
     .sideBar {
         width: 72px;
         padding: 1rem 0.2rem;
@@ -276,6 +282,13 @@ body {
         width: 0;
         padding: 0;
         margin: 0;
+    }
+    .main-content {
+        margin-left: 72px !important;
+    }
+    .videoList {
+        gap: 0.7rem;
+        padding: 1rem;
     }
 }
 
@@ -300,10 +313,12 @@ body {
     .sideBar.collapsed {
         width: 100%;
     }
+    .main-content {
+        margin-left: 0 !important;
+    }
     .videoList {
         padding: 0.5rem;
         gap: 0.5rem;
-        margin-left: 0 !important;
         justify-content: center;
         transition: none;
     }

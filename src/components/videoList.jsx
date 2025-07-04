@@ -34,16 +34,10 @@ function VideoList({ sidebarOpen }) {
     ]
 
     return (
-        <div
-            className='videoList'
-            style={sidebarOpen
-                ? { marginLeft: 220 }
-                : { marginLeft: 0 }
-            }
-        >
-            {videos.map((v, i) => (
-                <Link to={`/Video/${v.id}`}>
-                    <Video key={i} {...v} />
+        <div className='videoList'>
+            {videos.map((video, i) => (
+                <Link to={`/Video/${video.id}`}>
+                    <Video key={i} {...video} />
                 </Link>
             ))}
         </div>

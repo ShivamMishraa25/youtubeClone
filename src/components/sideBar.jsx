@@ -3,14 +3,15 @@ import { IoMdHome } from "react-icons/io";
 import { SiYoutubeshorts } from "react-icons/si";
 import { MdSubscriptions } from "react-icons/md";
 import '../css/homePage.css'
+import { Link } from 'react-router-dom';
 
 function SideBar({ sidebarOpen }) {
     return (
         <nav className={`sideBar${sidebarOpen ? '' : ' collapsed'}`}>
-            <div className="sideBar-item">
+            <Link to="/" className="sideBar-item">
                 <IoMdHome />
                 <span className="sideBar-label">Home</span>
-            </div>
+            </Link>
             <div className="sideBar-item">
                 <SiYoutubeshorts />
                 <span className="sideBar-label">Shorts</span>
