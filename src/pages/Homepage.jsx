@@ -1,7 +1,7 @@
 import React from 'react'
 import SideBar from '../components/sideBar.jsx'
 import VideoList from '../components/videoList.jsx'
-import '../css/homePage.css'
+import '../css/homepage.css'
 
 function Homepage({ sidebarOpen }) {
   return (

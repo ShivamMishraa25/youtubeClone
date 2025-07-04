@@ -1,10 +1,10 @@
 import React from 'react'
 import '../css/homePage.css'
 
-function Video({ title, channel, views, thumb }) {
+function Video({ title, channel, views, thumbnail }) {
     return (
         <div className='video'>    
-            <img src={thumb} alt={title} className='thumbnail' />
+            <img src={thumbnail} alt={title} className='thumbnail' />
             <div>
                 <figure className='channel'>
                     <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="" className='channel-icon' />

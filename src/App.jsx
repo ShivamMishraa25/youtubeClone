@@ -4,7 +4,7 @@ import Homepage from './pages/Homepage.jsx'
 import './App.css'
 
 function App() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <>

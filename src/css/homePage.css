@@ -210,8 +210,8 @@ body {
     transition: box-shadow 0.2s;
     display: flex;
     flex-direction: column;
-    width: 220px;
-    min-width: 180px;
+    width: 360px;
+    min-width: 320px;
     max-width: 100%;
     margin: 0;
 }
@@ -222,9 +222,10 @@ body {
 
 .video .thumbnail {
     width: 100%;
-    height: 120px;
+    height: 202px;
     object-fit: cover;
     background: #ddd;
+    border-radius: 12px 12px 0 0;
 }
 
 .video > div {

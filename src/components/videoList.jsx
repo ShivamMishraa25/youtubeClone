@@ -9,19 +9,22 @@ function VideoList({ sidebarOpen }) {
             title: "React Tutorial for Beginners",
             channel: "CodeAcademy",
             views: "1.2M",
-            thumb: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg"
+            thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
         {
             title: "Learn JavaScript in 1 Hour",
             channel: "JS Mastery",
             views: "900K",
-            thumb: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg"
+            thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
         {
             title: "CSS Flexbox Guide",
             channel: "DesignCourse",
             views: "500K",
-            thumb: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg"
+            thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
         // ...add more as needed
     ]
