@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Header from './components/header.jsx'
-import Homepage from './pages/Homepage.jsx'
 import './App.css'
+import { Outlet } from 'react-router-dom'
 
 function App() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -9,7 +9,7 @@ function App() {
     return (
         <>
             <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-            <Homepage sidebarOpen={sidebarOpen} />
+            <Outlet context={{ sidebarOpen }} />
         </>
     )
 }

@@ -1,11 +1,13 @@
 import React from 'react'
 import Video from './Video.jsx'
 import '../css/homePage.css'
+import { Link } from 'react-router-dom'
 
 function VideoList({ sidebarOpen }) {
     // Example video data
     const videos = [
         {
+            id: 1,
             title: "React Tutorial for Beginners",
             channel: "CodeAcademy",
             views: "1.2M",
@@ -13,6 +15,7 @@ function VideoList({ sidebarOpen }) {
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
         {
+            id: 2,
             title: "Learn JavaScript in 1 Hour",
             channel: "JS Mastery",
             views: "900K",
@@ -20,6 +23,7 @@ function VideoList({ sidebarOpen }) {
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
         },
         {
+            id: 3,
             title: "CSS Flexbox Guide",
             channel: "DesignCourse",
             views: "500K",
@@ -38,7 +42,9 @@ function VideoList({ sidebarOpen }) {
             }
         >
             {videos.map((v, i) => (
-                <Video key={i} {...v} />
+                <Link to={`/Video/${v.id}`}>
+                    <Video key={i} {...v} />
+                </Link>
             ))}
         </div>
     )
