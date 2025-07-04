@@ -1,20 +1,31 @@
 import React from 'react'
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaYoutube } from "react-icons/fa";
+import { CiSearch } from "react-icons/ci";
+import { FaBell, FaUser } from "react-icons/fa";
+import { RiVideoUploadLine } from "react-icons/ri";
+import '../css/homePage.css'
 
-function Header() {
+function Header({ sidebarOpen, setSidebarOpen }) {
     return (
-        <header>
+        <header className='header'>
             <div className='left'>
-                {/* burger icon and youtube icon */}
-                <RxHamburgerMenu />
-                <FaYoutube />
+                <span onClick={() => setSidebarOpen(!sidebarOpen)} style={{cursor: 'pointer'}}>
+                    <RxHamburgerMenu />
+                </span>
+                <div className='youtube'>
+                    <FaYoutube className="fa-youtube" />
+                    <h2>YouTube</h2>
+                </div>
             </div>
             <div className='mid'>
-                {/* search bar, button and mic icon */}
+                <input placeholder="Search" />
+                <button><CiSearch /></button>
             </div>
             <div className='right'>
-                {/* notification and user icon */}
+                <RiVideoUploadLine />
+                <FaBell />
+                <FaUser />
             </div>
         </header>
     )
