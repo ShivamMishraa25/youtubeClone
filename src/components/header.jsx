@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom'
 import '../css/homePage.css'
 import '../css/registerLogin.css'
+import UserModal from './UserModal.jsx'
 
 function Header({ sidebarOpen, setSidebarOpen }) {
     const { user } = useAuth(); // get user from context
@@ -34,13 +35,16 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 <RiVideoUploadLine />
                 <FaBell />
                 {user ? (
-                    <img
-                        src={user.avatar}
-                        alt="User"
-                        className="header-avatar"
-                        onClick={() => showModal?setShowModal(false):setShowModal(true)} // or toggle dropdown
-                        style={{ cursor: 'pointer', borderRadius: '50%' }}
-                    />
+                    <>
+                        <img
+                            src={user.avatar}
+                            alt="User"
+                            className="header-avatar"
+                            onClick={() => setShowModal(v => !v)}
+                            style={{ cursor: 'pointer', borderRadius: '50%' }}
+                        />
+                        {showModal && <UserModal onClose={() => setShowModal(false)} />}
+                    </>
                     ) : (
                     <>
                         <Link to="/login" className="header-auth-link">Sign in</Link>
