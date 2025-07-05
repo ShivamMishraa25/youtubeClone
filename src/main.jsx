@@ -6,6 +6,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import VideoPlayer from './pages/VideoPlayer.jsx'
 import Channel from './components/Channel.jsx'
 import Homepage from './pages/Homepage.jsx'
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import Register from './pages/register.jsx'
+import Login from './pages/login.jsx'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/video/:videoId",
         element: <VideoPlayer />
+      },
+      {
+        path: "/register",
+        element: <Register />
+      },
+      {
+        path: "/login",
+        element: <Login />
       }
     ]
   },
@@ -30,6 +41,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )

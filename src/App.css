@@ -10,3 +10,11 @@
     /* margin-left is now handled inline in App.jsx */
     /* Add padding if you want spacing inside the content */
 }
+
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none;
+}

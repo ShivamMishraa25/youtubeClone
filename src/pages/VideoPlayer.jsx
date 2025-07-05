@@ -85,7 +85,7 @@ function VideoPlayer() {
                 {
                     _id: Date.now().toString(),
                     username: "You",
-                    avatar: "https://via.placeholder.com/40.png?text=Y",
+                    avatar: "https://placehold.co/40.png?text=Y",
                     text: comment,
                     timestamp: new Date().toISOString()
                 },
