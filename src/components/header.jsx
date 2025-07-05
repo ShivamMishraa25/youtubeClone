@@ -5,8 +5,9 @@ import { CiSearch } from "react-icons/ci";
 import { FaBell, FaUser } from "react-icons/fa";
 import { RiVideoUploadLine } from "react-icons/ri";
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'
 import '../css/homePage.css'
+import '../css/registerLogin.css'
 
 function Header({ sidebarOpen, setSidebarOpen }) {
     const { user } = useAuth(); // get user from context
@@ -19,10 +20,10 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 <span onClick={() => setSidebarOpen(!sidebarOpen)} style={{cursor: 'pointer'}}>
                     <RxHamburgerMenu />
                 </span>
-                <div className='youtube'>
+                <Link to="/" className='youtube'>
                     <FaYoutube className="fa-youtube" />
                     <h2>YouTube</h2>
-                </div>
+                </Link>
             </div>
             <div className='mid'>
                 <input placeholder="Search" />
@@ -37,12 +38,12 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                         alt="User"
                         className="header-avatar"
                         onClick={() => navigate('/profile')} // or toggle dropdown
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer', borderRadius: '50%' }}
                     />
                     ) : (
                     <>
-                        <Link to="/login" className="header-auth-btn">Sign in</Link>
-                        <Link to="/register" className="header-auth-btn">Sign up</Link>
+                        <Link to="/login" className="header-auth-link">Sign in</Link>
+                        <Link to="/register" className="header-auth-link signup">Sign up</Link>
                     </>
                 )}
             </div>
@@ -51,3 +52,10 @@ function Header({ sidebarOpen, setSidebarOpen }) {
 }
 
 export default Header
+
+// localStorage.setItem("user", JSON.stringify({
+//   username: "shivam_dev",
+//   userId: "user01",
+//   avatar: "https://placehold.co/40x40.png?text=S", 
+//   channelId: null // later set to some ID like "channel01"
+// }));

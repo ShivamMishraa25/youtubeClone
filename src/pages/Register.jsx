@@ -29,6 +29,7 @@ function Register() {
                     id="username"
                     name="username"
                     type="text"
+                    placeholder='username'
                     value={form.username}
                     onChange={handleChange}
                     required
@@ -39,6 +40,7 @@ function Register() {
                     id="email"
                     name="email"
                     type="email"
+                    placeholder='email'
                     value={form.email}
                     onChange={handleChange}
                     required
@@ -49,6 +51,7 @@ function Register() {
                     id="avatar"
                     name="avatar"
                     type="url"
+                    placeholder='avatar url'
                     value={form.avatar}
                     onChange={handleChange}
                     autoComplete="photo"
@@ -58,6 +61,7 @@ function Register() {
                     id="password"
                     name="password"
                     type="password"
+                    placeholder='password'
                     value={form.password}
                     onChange={handleChange}
                     required

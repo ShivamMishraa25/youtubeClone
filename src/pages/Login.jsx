@@ -27,6 +27,7 @@ function Login() {
                     id="email"
                     name="email"
                     type="email"
+                    placeholder='email'
                     value={form.email}
                     onChange={handleChange}
                     required
@@ -37,6 +38,7 @@ function Login() {
                     id="password"
                     name="password"
                     type="password"
+                    placeholder='password'
                     value={form.password}
                     onChange={handleChange}
                     required
