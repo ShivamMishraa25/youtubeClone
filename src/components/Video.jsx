@@ -12,7 +12,7 @@ function Video({ title, channel, views, thumbnail }) {
                 <div>
                     <div className='video-title'>{title}</div>
                     <div className='channel-name'>{channel}</div>
-                    <div className='views'>{views}</div>
+                    <div className='views'>{views} views</div>
                 </div>
             </div>
         </div>

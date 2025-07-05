@@ -4,10 +4,11 @@ import { useParams } from 'react-router-dom'
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike } from "react-icons/ai";
 import { IoMdShare } from "react-icons/io";
 import { MdDownload } from "react-icons/md";
-import { BsThreeDots } from "react-icons/bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 function VideoPlayer() {
     const { videoId } = useParams();
+    // const isLiked = user?.likedVideos?.includes(videoId);
 
     const video = {
         _id: "video123",
@@ -50,6 +51,15 @@ function VideoPlayer() {
     const [descExpanded, setDescExpanded] = useState(false);
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState(video.comments);
+    const [menuOpen, setMenuOpen] = useState(null); // comment id for open menu
+    const [editId, setEditId] = useState(null);
+    const [editText, setEditText] = useState("");
+
+    // Simulate current user
+    const currentUser = {
+        username: "You",
+        avatar: "https://placehold.co/40.png?text=Y"
+    };
 
     const handleLike = () => {
         if (liked) {
@@ -84,14 +94,42 @@ function VideoPlayer() {
             setComments([
                 {
                     _id: Date.now().toString(),
-                    username: "You",
-                    avatar: "https://placehold.co/40.png?text=Y",
+                    username: currentUser.username,
+                    avatar: currentUser.avatar,
                     text: comment,
                     timestamp: new Date().toISOString()
                 },
                 ...comments
             ]);
             setComment("");
+        }
+    };
+
+    const handleEdit = (comment) => {
+        setEditId(comment._id);
+        setEditText(comment.text);
+        setMenuOpen(null);
+    };
+
+    const handleEditSave = (id) => {
+        setComments(comments =>
+            comments.map(c =>
+                c._id === id ? { ...c, text: editText } : c
+            )
+        );
+        setEditId(null);
+        setEditText("");
+    };
+
+    const handleEditCancel = () => {
+        setEditId(null);
+        setEditText("");
+    };
+
+    const handleDelete = (id) => {
+        if (window.confirm("Delete this comment?")) {
+            setComments(comments => comments.filter(c => c._id !== id));
+            setMenuOpen(null);
         }
     };
 
@@ -145,7 +183,7 @@ function VideoPlayer() {
                             <span>Download</span>
                         </button>
                         <button className="video-player-action-btn static-btn">
-                            <BsThreeDots />
+                            <BsThreeDotsVertical />
                         </button>
                     </div>
                 </div>
@@ -170,7 +208,7 @@ function VideoPlayer() {
                         {comments.length} Comments
                     </div>
                     <div className="video-player-add-comment">
-                        <img src="https://placehold.co/40.png?text=Y" alt="You" className="video-player-comment-avatar" />
+                        <img src={currentUser.avatar} alt="You" className="video-player-comment-avatar" />
                         <input
                             className="video-player-comment-input"
                             placeholder="Add a comment..."
@@ -196,8 +234,61 @@ function VideoPlayer() {
                                         <span className="video-player-comment-time">
                                             {new Date(comment.timestamp).toLocaleDateString()}
                                         </span>
+                                        <span
+                                            className="comment-meatball"
+                                            tabIndex={0}
+                                            onClick={() =>
+                                                setMenuOpen(menuOpen === comment._id ? null : comment._id)
+                                            }
+                                        >
+                                            <BsThreeDotsVertical />
+                                            {menuOpen === comment._id && comment.username === currentUser.username && (
+                                                <div className="comment-menu-dropdown">
+                                                    <button
+                                                        className="comment-menu-item"
+                                                        onClick={() => handleEdit(comment)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        className="comment-menu-item delete"
+                                                        onClick={() => handleDelete(comment._id)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </span>
                                     </div>
-                                    <div className="video-player-comment-text">{comment.text}</div>
+                                    <div className="video-player-comment-text">
+                                        {editId === comment._id ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <input
+                                                    className="video-player-comment-input"
+                                                    value={editText}
+                                                    onChange={e => setEditText(e.target.value)}
+                                                    style={{ flex: 1, minWidth: 0 }}
+                                                />
+                                                <button
+                                                    className="video-player-comment-btn"
+                                                    style={{ padding: "0.3rem 1rem", fontSize: "0.95rem" }}
+                                                    onClick={() => handleEditSave(comment._id)}
+                                                    disabled={!editText.trim()}
+                                                >
+                                                    Save
+                                                </button>
+                                                <button
+                                                    className="video-player-comment-btn"
+                                                    style={{ padding: "0.3rem 1rem", fontSize: "0.95rem", background: "#eee", color: "#222" }}
+                                                    onClick={handleEditCancel}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            comment.text
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}

@@ -29,7 +29,7 @@ function UserModal({ onClose, setShowModal }) {
                     <img src={user.avatar} alt={user.username} className="user-modal-avatar" />
                     <div className="user-modal-info">
                         <div className="user-modal-username">{user.username}</div>
-                        <div className="user-modal-userid">@{user.userId?.toLowerCase().replace(/\s/g, '') || 'user'}</div>
+                        <div className="user-modal-userid">@{user._id?.toLowerCase().replace(/\s/g, '') || 'user'}</div>
                         {user.channelId ? (
                             <Link to="/channel" className="user-modal-link">View your channel</Link>
                         ) : (
