@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RxHamburgerMenu } from "react-icons/rx";
 import { FaYoutube } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
@@ -12,6 +12,7 @@ import '../css/registerLogin.css'
 function Header({ sidebarOpen, setSidebarOpen }) {
     const { user } = useAuth(); // get user from context
     const navigate = useNavigate(); // get useNavigate hook from react-router-dom
+    const [showModal, setShowModal] = useState(false);
 
 
     return (
@@ -37,7 +38,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                         src={user.avatar}
                         alt="User"
                         className="header-avatar"
-                        onClick={() => navigate('/profile')} // or toggle dropdown
+                        onClick={() => showModal?setShowModal(false):setShowModal(true)} // or toggle dropdown
                         style={{ cursor: 'pointer', borderRadius: '50%' }}
                     />
                     ) : (

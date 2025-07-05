@@ -1,6 +1,6 @@
 import React from 'react'
 import SideBar from '../components/SideBar.jsx'
-import VideoList from '../components/videoList.jsx'
+import VideoList from '../components/VideoList.jsx'
 import '../css/homepage.css'
 import { useOutletContext } from 'react-router-dom'
 
