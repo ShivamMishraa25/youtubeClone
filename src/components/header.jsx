@@ -11,7 +11,7 @@ import '../css/registerLogin.css'
 import UserModal from './UserModal.jsx'
 
 function Header({ sidebarOpen, setSidebarOpen }) {
-    const { user } = useAuth(); // get user from context
+    const { user, setUser } = useAuth(); // get user from context
     const navigate = useNavigate(); // get useNavigate hook from react-router-dom
     const [showModal, setShowModal] = useState(false);
 
@@ -32,6 +32,24 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 <button><CiSearch /></button>
             </div>
             <div className='right'>
+
+
+
+{/* temporary code button ---------------------------------------------------- */}
+                <button onClick={()=>{
+                    localStorage.setItem("user", JSON.stringify({
+                    username: "shivam_dev",
+                    userId: "user01",
+                    avatar: "https://placehold.co/40x40.png?text=S", 
+                    channelId: null // later set to some ID like "channel01"
+                    }));
+                setUser({
+                "username": "shivam_dev",
+                "userId": "user01",
+                "avatar": "https://placehold.co/40x40.png?text=S",
+                "channelId": null
+                });}
+                }>quick login</button>
                 <RiVideoUploadLine />
                 <FaBell />
                 {user ? (
@@ -43,7 +61,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                             onClick={() => setShowModal(v => !v)}
                             style={{ cursor: 'pointer', borderRadius: '50%' }}
                         />
-                        {showModal && <UserModal onClose={() => setShowModal(false)} />}
+                        {showModal && <UserModal setShowModal={setShowModal} onClose={() => setShowModal(false)} />}
                     </>
                     ) : (
                     <>

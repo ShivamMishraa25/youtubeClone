@@ -1,19 +1,26 @@
 import React from 'react'
 import { useAuth } from '../contexts/AuthContext.jsx'
 import '../css/userModal.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiChevronRight } from "react-icons/fi";
 import { MdOutlineAccountCircle, MdOutlineSwitchAccount, MdLogout, MdOutlineSettings, MdOutlineLanguage, MdOutlineLocationOn } from "react-icons/md";
 import { BsMoon, BsSun } from "react-icons/bs";
 import { FaRegKeyboard } from "react-icons/fa";
 
-function UserModal({ onClose }) {
-    const { user } = useAuth();
+function UserModal({ onClose, setShowModal }) {
+    const { user, setUser } = useAuth();
+    const navigate = useNavigate();
 
     // Placeholder handlers
     const handleViewChannel = () => {};
-    const handleCreateChannel = () => {};
-    const handleSignOut = () => {};
+    const handleCreateChannel = () => {
+        navigate("/createChannel");
+    };
+    const handleSignOut = () => {
+        localStorage.removeItem('user');
+        setShowModal(false);
+        setUser(null);
+    };
 
     return (
         <div className="user-modal-overlay" onClick={onClose}>
@@ -22,7 +29,7 @@ function UserModal({ onClose }) {
                     <img src={user.avatar} alt={user.username} className="user-modal-avatar" />
                     <div className="user-modal-info">
                         <div className="user-modal-username">{user.username}</div>
-                        <div className="user-modal-userid">@{user.username?.toLowerCase().replace(/\s/g, '') || 'user'}</div>
+                        <div className="user-modal-userid">@{user.userId?.toLowerCase().replace(/\s/g, '') || 'user'}</div>
                         {user.channelId ? (
                             <Link to="/channel" className="user-modal-link">View your channel</Link>
                         ) : (
@@ -32,10 +39,10 @@ function UserModal({ onClose }) {
                 </div>
                 <div className="user-modal-divider"></div>
                 <div className="user-modal-list">
-                    <a className="user-modal-listitem" href="#">
+                    <div className="user-modal-listitem">
                         <MdOutlineAccountCircle className="user-modal-icon" />
                         Google Account
-                    </a>
+                    </div>
                     <div className="user-modal-listitem user-modal-listitem-arrow">
                         <MdOutlineSwitchAccount className="user-modal-icon" />
                         Switch account
