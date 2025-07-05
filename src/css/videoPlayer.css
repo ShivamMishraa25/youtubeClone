@@ -2,9 +2,18 @@
     display: flex;
     flex-direction: row;
     gap: 2rem;
-    padding: 2rem 0 2rem 0;
+    padding: 2rem 1rem 2rem 1rem; /* Add 1rem horizontal margin */
     background: #f9f9f9;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+body {
+    /* Prevent horizontal scroll globally */
+    overflow-x: hidden;
 }
 
 .video-player-page.light {
@@ -299,7 +308,7 @@
     font-size: 1rem;
     border-radius: 2rem;
     padding: 0.5rem 1.5rem;
-    margin-left: 1.5rem;
+    /* margin-left: 1.5rem; */
     cursor: pointer;
     transition: background 0.18s, color 0.18s;
     border: 1px solid #0f0f0f;
@@ -357,7 +366,7 @@
     .video-player-page {
         flex-direction: column;
         gap: 1.5rem;
-        padding: 1rem 0;
+        padding: 1rem 1rem; /* Keep 1rem margin on small screens too */
     }
     .video-player-main {
         max-width: 100%;
