@@ -7,11 +7,11 @@ function Video({ title, channel, views, thumbnail }) {
             <img src={thumbnail} alt={title} className='thumbnail' />
             <div>
                 <figure className='channel'>
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="" className='channel-icon' />
+                    <img src={channel.channelPic} alt={channel.channelName} className='channel-icon' />
                 </figure>
                 <div>
                     <div className='video-title'>{title}</div>
-                    <div className='channel-name'>{channel}</div>
+                    <div className='channel-name'>{channel.channelName}</div>
                     <div className='views'>{views} views</div>
                 </div>
             </div>

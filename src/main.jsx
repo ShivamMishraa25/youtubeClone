@@ -10,6 +10,7 @@ import Register from './pages/register.jsx'
 import Login from './pages/login.jsx'
 import CreateChannel from './components/CreateChannel.jsx'
 import Channel from './pages/Channel.jsx'
+import Channels from './pages/Channels.jsx'
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         path: "/channel",
         element: <Channel />
       },
+      {
+        path: "/channels/:id",
+        element: <Channels />
+      }
     ]
   },
 ])

@@ -3,12 +3,17 @@ import { dummyChannel } from '../contexts/dummyChannel.jsx'
 import '../css/channel.css'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdEdit, MdDelete, MdUpload } from "react-icons/md";
-import { useOutletContext } from 'react-router-dom'
+import { Link, useOutletContext } from 'react-router-dom'
 
 function YourChannel() {
   const { sidebarOpen } = useOutletContext();
   const [videos, setVideos] = useState(dummyChannel.videos);
   const [menuOpen, setMenuOpen] = useState(null);
+  const [descExpanded, setDescExpanded] = useState(false);
+
+  const descLimit = 180;
+  const showMore = dummyChannel.description.length > descLimit;
+  const descToShow = descExpanded ? dummyChannel.description : dummyChannel.description.slice(0, descLimit);
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this video?")) {
@@ -49,7 +54,13 @@ function YourChannel() {
             <span className="channel-videos">{videos.length} videos</span>
           </div>
           <div className="channel-desc">
-            {dummyChannel.description}
+            {descToShow}
+            {showMore && !descExpanded && (
+              <span className="desc-more" onClick={() => setDescExpanded(true)}>...more</span>
+            )}
+            {showMore && descExpanded && (
+              <span className="desc-less" onClick={() => setDescExpanded(false)}> Show less</span>
+            )}
           </div>
           <div className="channel-actions">
             <button className="channel-btn" onClick={handleUpload}>
@@ -71,7 +82,9 @@ function YourChannel() {
       <div className="channel-videos-list">
         {videos.map(video => (
           <div className="channel-video-card" key={video._id}>
-            <img className="channel-video-thumb" src={video.thumbnail} alt={video.title} />
+            <Link to={`/video/:${video._id}`}>
+              <img className="channel-video-thumb" src={video.thumbnail} alt={video.title} />
+            </Link>
             <div className="channel-video-info">
               <div className="channel-video-title">{video.title}</div>
               <div className="channel-video-meta">

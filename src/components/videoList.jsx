@@ -9,7 +9,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 1,
             title: "React Tutorial for Beginners",
-            channel: "CodeAcademy",
+            channel: {
+                _id: "channel04",
+                channelName: "Code Academy",
+                channelPic: "https://placehold.co/100x100.png?text=Code A",
+            },
             views: "1.2M",
             thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
@@ -17,7 +21,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 2,
             title: "Learn JavaScript in 1 Hour",
-            channel: "JS Mastery",
+            channel: {
+                _id: "channel05",
+                channelName: "JS Mastery",
+                channelPic: "https://placehold.co/100x100.png?text=JS",
+            },
             views: "900K",
             thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
@@ -25,7 +33,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 3,
             title: "CSS Flexbox Guide",
-            channel: "DesignCourse",
+            channel: {
+                _id: "channel03",
+                channelName: "Design Course",
+                channelPic: "https://placehold.co/100x100.png?text=Design c",
+            },
             views: "500K",
             thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
@@ -33,7 +45,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 4,
             title: "React Tutorial for Beginners",
-            channel: "CodeAcademy",
+            channel: {
+                _id: "channel04",
+                channelName: "Code Academy",
+                channelPic: "https://placehold.co/100x100.png?text=Code A",
+            },
             views: "1.2M",
             thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
@@ -41,7 +57,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 5,
             title: "Learn JavaScript in 1 Hour",
-            channel: "JS Mastery",
+            channel: {
+                _id: "channel05",
+                channelName: "JS Mastery",
+                channelPic: "https://placehold.co/100x100.png?text=JS",
+            },
             views: "900K",
             thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
@@ -49,7 +69,11 @@ function VideoList({ sidebarOpen }) {
         {
             id: 6,
             title: "CSS Flexbox Guide",
-            channel: "DesignCourse",
+            channel: {
+                _id: "channel03",
+                channelName: "Design Course",
+                channelPic: "https://placehold.co/100x100.png?text=Design c",
+            },
             views: "500K",
             thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
             videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"

@@ -76,9 +76,9 @@ function Header({ sidebarOpen, setSidebarOpen }) {
 
 export default Header
 
-localStorage.setItem("user", JSON.stringify({
-  _id: "user01",
-  username: "shivam_dev",
-  avatar: "https://placehold.co/40x40.png?text=S", 
-  channelId: null // later set to some ID like "channel01"
-}));
+// localStorage.setItem("user", JSON.stringify({
+//   _id: "user01",
+//   username: "shivam_dev",
+//   avatar: "https://placehold.co/40x40.png?text=S", 
+//   channelId: null // later set to some ID like "channel01"
+// }));
