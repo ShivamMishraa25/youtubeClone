@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../css/videoPlayer.css'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike } from "react-icons/ai";
 import { IoMdShare } from "react-icons/io";
 import { MdDownload } from "react-icons/md";
@@ -17,6 +17,7 @@ function VideoPlayer() {
         videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
         thumbnail: "https://placehold.co/360x202.png?text=React+Thumbnail",
         channel: {
+            _id: "channel01",
             channelName: "Code with John",
             channelPic: "https://placehold.co/50x50.png?text=John",
             channelBanner: "https://placehold.co/300x100.png?text=Banner",
@@ -152,11 +153,15 @@ function VideoPlayer() {
                 <div className="video-player-title">{video.title}</div>
                 <div className="video-player-row">
                     <div className="video-player-channel-row">
-                        <img src={video.channel.channelPic} alt={video.channel.channelName} className="video-player-channel-pic" />
-                        <div className="video-player-channel-info">
-                            <div className="video-player-channel-name">{video.channel.channelName}</div>
-                            <div className="video-player-subscribers">{video.channel.subscribers.toLocaleString()} subscribers</div>
-                        </div>
+                        <Link to={`/channels/:${video?.channel?._id}`}>
+                            <img src={video.channel.channelPic} alt={video.channel.channelName} className="video-player-channel-pic" />
+                        </Link>
+                        <Link to={`/channels/:${video?.channel?._id}`}>
+                            <div className="video-player-channel-info">
+                                <div className="video-player-channel-name">{video.channel.channelName}</div>
+                                <div className="video-player-subscribers">{video.channel.subscribers.toLocaleString()} subscribers</div>
+                            </div>
+                        </Link>
                         <button className="video-player-subscribe-btn">Subscribe</button>
                     </div>
                     <div className="video-player-actions">

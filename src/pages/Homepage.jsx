@@ -8,7 +8,6 @@ function Homepage() {
   const { sidebarOpen } = useOutletContext();
   return (
     <div className='homepage'>
-        <SideBar sidebarOpen={sidebarOpen} />
         <VideoList sidebarOpen={sidebarOpen} />
     </div>
   )

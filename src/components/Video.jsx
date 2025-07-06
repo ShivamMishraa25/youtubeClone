@@ -1,17 +1,26 @@
 import React from 'react'
 import '../css/homePage.css'
+import { Link } from 'react-router-dom'
 
-function Video({ title, channel, views, thumbnail }) {
+function Video({ _id, title, channel, views, thumbnail }) {
     return (
-        <div className='video'>    
-            <img src={thumbnail} alt={title} className='thumbnail' />
+        <div className='video'> 
+            <Link to={`/Video/${_id}`}>
+                <img src={thumbnail} alt={title} className='thumbnail' />
+            </Link>
             <div>
                 <figure className='channel'>
-                    <img src={channel.channelPic} alt={channel.channelName} className='channel-icon' />
+                    <Link to={`/channels/:${channel._id}`}>
+                        <img src={channel.channelPic} alt={channel.channelName} className='channel-icon' />
+                    </Link>
                 </figure>
                 <div>
-                    <div className='video-title'>{title}</div>
-                    <div className='channel-name'>{channel.channelName}</div>
+                    <Link to={`/Video/${_id}`}>
+                        <div className='video-title'>{title}</div>
+                    </Link>
+                    <Link to={`/channels/:${channel._id}`}>
+                        <div className='channel-name'>{channel.channelName}</div>
+                    </Link>
                     <div className='views'>{views} views</div>
                 </div>
             </div>

@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Video from './Video.jsx'
 import '../css/homePage.css'
 import { Link } from 'react-router-dom'
 
 function VideoList({ sidebarOpen }) {
+    const categories = ["All", "Programming", "Tech", "Gaming", "Vlogs", "Music", "Design", "AI", "Education"];
+
     // Example video data
     const videos = [
         {
-            id: 1,
+            _id: 1,
             title: "React Tutorial for Beginners",
             channel: {
                 _id: "channel04",
@@ -16,10 +18,11 @@ function VideoList({ sidebarOpen }) {
             },
             views: "1.2M",
             thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "programming"
         },
         {
-            id: 2,
+            _id: 2,
             title: "Learn JavaScript in 1 Hour",
             channel: {
                 _id: "channel05",
@@ -28,10 +31,11 @@ function VideoList({ sidebarOpen }) {
             },
             views: "900K",
             thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "Tech"
         },
         {
-            id: 3,
+            _id: 3,
             title: "CSS Flexbox Guide",
             channel: {
                 _id: "channel03",
@@ -40,10 +44,11 @@ function VideoList({ sidebarOpen }) {
             },
             views: "500K",
             thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "Gaming"
         },
         {
-            id: 4,
+            _id: 4,
             title: "React Tutorial for Beginners",
             channel: {
                 _id: "channel04",
@@ -52,10 +57,11 @@ function VideoList({ sidebarOpen }) {
             },
             views: "1.2M",
             thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "design"
         },
         {
-            id: 5,
+            _id: 5,
             title: "Learn JavaScript in 1 Hour",
             channel: {
                 _id: "channel05",
@@ -64,10 +70,11 @@ function VideoList({ sidebarOpen }) {
             },
             views: "900K",
             thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "AI"
         },
         {
-            id: 6,
+            _id: 6,
             title: "CSS Flexbox Guide",
             channel: {
                 _id: "channel03",
@@ -76,18 +83,39 @@ function VideoList({ sidebarOpen }) {
             },
             views: "500K",
             thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
-            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+            videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+            category: "education"
         },
         // ...add more as needed
     ]
 
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
+    // Filter videos by category (if not "All")
+    const filteredVideos = selectedCategory === "All"
+        ? videos
+        : videos.filter(v =>
+            v.category?.toLowerCase() === selectedCategory.toLowerCase()
+        );
+
     return (
-        <div className='videoList'>
-            {videos.map((video, i) => (
-                <Link to={`/Video/${video.id}`}>
-                    <Video key={i} {...video} />
-                </Link>
-            ))}
+        <div className='home-page'>
+            <div className='filter-options'>
+                {categories.map(cat => (
+                    <button
+                        key={cat}
+                        className={`filter-btn${selectedCategory === cat ? ' active' : ''}`}
+                        onClick={() => setSelectedCategory(cat)}
+                    >
+                        {cat}
+                    </button>
+                ))}
+            </div>
+            <div className='videoList'>
+                {filteredVideos.map((video, i) => (
+                    <Video {...video} key={i}/>
+                ))}
+            </div>
         </div>
     )
 }
