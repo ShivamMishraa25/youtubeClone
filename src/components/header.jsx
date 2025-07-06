@@ -47,7 +47,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 "username": "shivam_dev",
                 "userId": "user01",
                 "avatar": "https://placehold.co/40x40.png?text=S",
-                "channelId": null
+                "channelId": "channel01"
                 });}
                 }>quick login</button>
                 <RiVideoUploadLine />

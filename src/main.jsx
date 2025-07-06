@@ -4,11 +4,12 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import VideoPlayer from './pages/VideoPlayer.jsx'
-import Channel from './components/Channel.jsx'
 import Homepage from './pages/Homepage.jsx'
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import Register from './pages/register.jsx'
 import Login from './pages/login.jsx'
+import CreateChannel from './components/CreateChannel.jsx'
+import Channel from './pages/Channel.jsx'
 
 const router = createBrowserRouter([
   {
@@ -18,10 +19,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Homepage />
-      },
-      {
-        path: "/channel",
-        element: <Channel />
       },
       {
         path: "/video/:videoId",
@@ -34,7 +31,15 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />
-      }
+      },
+      {
+        path: "/createChannel",
+        element: <CreateChannel />
+      },
+      {
+        path: "/channel",
+        element: <Channel />
+      },
     ]
   },
 ])

@@ -12,7 +12,10 @@ function UserModal({ onClose, setShowModal }) {
     const navigate = useNavigate();
 
     // Placeholder handlers
-    const handleViewChannel = () => {};
+    const handleViewChannel = () => {
+        navigate("/channel");
+        setShowModal(false);
+    };
     const handleCreateChannel = () => {
         navigate("/createChannel");
     };
@@ -31,7 +34,7 @@ function UserModal({ onClose, setShowModal }) {
                         <div className="user-modal-username">{user.username}</div>
                         <div className="user-modal-userid">@{user._id?.toLowerCase().replace(/\s/g, '') || 'user'}</div>
                         {user.channelId ? (
-                            <Link to="/channel" className="user-modal-link">View your channel</Link>
+                            <span className="user-modal-link" onClick={handleViewChannel}>View your channel</span>
                         ) : (
                             <span className="user-modal-link" onClick={handleCreateChannel}>Create your channel</span>
                         )}

@@ -8,7 +8,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 
 function VideoPlayer() {
     const { videoId } = useParams();
-    // const isLiked = user?.likedVideos?.includes(videoId);
+    // const isLiked = user?.likedVideos?.includes(videoId); // this will be used later
 
     const video = {
         _id: "video123",
