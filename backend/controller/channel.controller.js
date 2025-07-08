@@ -1,0 +1,69 @@
+import ChannelModel from '../model/channel.model.js';
+import UserModel from '../model/user.model.js';
+
+export const createChannel = async (req, res) => {
+  try {
+    const { channelName, description, channelPic, channelBanner } = req.body;
+
+    const channel = await ChannelModel.create({
+      channelName,
+      description,
+      channelPic,
+      channelBanner,
+      owner: req.user.id
+    });
+
+    await UserModel.findByIdAndUpdate(req.user.id, { channel: channel._id });
+
+    res.status(201).json(channel);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getChannelById = async (req, res) => {
+  try {
+    const channel = await ChannelModel.findById(req.params.id).populate('videos');
+    if (!channel) return res.status(404).json({ message: "Channel not found" });
+    res.json(channel);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getChannelByUser = async (req, res) => {
+  try {
+    const channel = await ChannelModel.findOne({ owner: req.params.userId }).populate('videos');
+    if (!channel) return res.status(404).json({ message: "Channel not found" });
+    res.json(channel);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateChannel = async (req, res) => {
+  try {
+    const channel = await ChannelModel.findById(req.params.id);
+    if (!channel || channel.owner.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    Object.assign(channel, req.body);
+    await channel.save();
+    res.json(channel);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const deleteChannel = async (req, res) => {
+  try {
+    const channel = await ChannelModel.findById(req.params.id);
+    if (!channel || channel.owner.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    await channel.remove();
+    res.json({ message: "Channel deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
