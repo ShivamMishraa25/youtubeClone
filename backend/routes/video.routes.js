@@ -9,11 +9,11 @@ import {
 import { protect } from '../middleware/authMiddleware.js';
 
 function videoRoutes(app) {
-    app.post('/', protect, uploadVideo);
-    app.get('/', getAllVideos);
-    app.get('/:id', getVideoById);
-    app.get('/channel/:channelId', getVideosByChannel);
-    app.delete('/:id', protect, deleteVideo);
+    app.post('/api/video', protect, uploadVideo);
+    app.get('/api/videos', getAllVideos);
+    app.get('/api/video/:id', getVideoById);
+    app.get('/api/videos/:channelId', getVideosByChannel);
+    app.delete('/api/video/:id', protect, deleteVideo);
 }
 
 export default videoRoutes;

@@ -9,11 +9,11 @@ import {
 import { protect } from '../middleware/authMiddleware.js';
 
 function channelRoutes(app) {
-    app.post('/', protect, createChannel); // create a channel
-    app.get('/:id', getChannelById);       // public
-    app.get('/user/:userId', getChannelByUser); // optional
-    app.put('/:id', protect, updateChannel);
-    app.delete('/:id', protect, deleteChannel);
+    app.post('/api/channel', protect, createChannel); // create a channel
+    app.get('/api/channel/:id', getChannelById);       // public
+    app.get('/api/userChannel/:userId', getChannelByUser); // optional
+    app.put('/api/updateChannel/:id', protect, updateChannel);
+    app.delete('/api/deleteChannel/:id', protect, deleteChannel);
 }
 
 export default channelRoutes;

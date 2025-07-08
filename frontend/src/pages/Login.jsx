@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../css/registerLogin.css'
+import { useAuth } from '../contexts/AuthContext.jsx';
+import axios from 'axios'
 
 function Login() {
+    const { user, setUser } = useAuth();
     const navigate = useNavigate();
     const [form, setForm] = useState({
         email: '',
@@ -13,9 +16,29 @@ function Login() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // TODO: handle login logic
+
+        try {
+            const { data } = await axios.post(
+                "http://localhost:5100/api/login",
+                form,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            // Backend response includes: _id, username, email, avatar, token, maybe channel
+            setUser(data); // This will trigger useEffect to store it in localStorage
+            navigate("/");
+
+        } catch (err) {
+            console.error("❌ Login failed:", err.response?.data?.message || err.message);
+            alert("Login failed: " + (err.response?.data?.message || "Something went wrong"));
+        }
     };
 
     return (

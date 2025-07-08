@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../css/registerLogin.css'
+import axios from 'axios'
 
 function Register() {
     const navigate = useNavigate();
@@ -15,9 +16,27 @@ function Register() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
         // TODO: handle registration logic
+        try {
+            const { data } = await axios.post(
+                "http://localhost:5100/api/register",
+                form,
+                {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            alert("User registered successfully, Please login");
+            navigate("/login");
+
+        } catch (err) {
+            console.error("❌ registration failed:", err.response?.data?.message || err.message);
+            alert("registration failed: " + (err.response?.data?.message || "Something went wrong"));
+        }
     };
 
     return (

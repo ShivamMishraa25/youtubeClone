@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 function Video({ _id, title, channel, views, thumbnail }) {
     return (
         <div className='video'> 
-            <Link to={`/Video/${_id}`}>
+            <Link className='video-pic' to={`/Video/${_id}`}>
                 <img src={thumbnail} alt={title} className='thumbnail' />
             </Link>
             <div>

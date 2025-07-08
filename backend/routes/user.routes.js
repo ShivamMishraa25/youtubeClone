@@ -6,9 +6,9 @@ import {
 } from '../controller/user.controller.js';
 
 function userRoutes(app) {
-    app.post('/register', registerUser);
-    app.post('/login', loginUser);
-    app.get('/profile', getUserProfile); // protected (requires JWT)
+    app.post('/api/register', registerUser);
+    app.post('/api/login', loginUser);
+    app.get('/api/profile', getUserProfile); // protected (requires JWT)
 }
 
 export default userRoutes;

@@ -108,6 +108,10 @@ body {
     color: #FF0000;
 }
 
+.header-avatar {
+    max-width: 2.5rem;
+}
+
 /* Homepage layout */
 .homepage {
     display: flex;
@@ -208,6 +212,10 @@ body {
     align-items: flex-start;
     /* Remove margin-left here */
     transition: none;
+}
+
+.video-pic {
+    min-height: 202px;
 }
 
 /* Video card styles */

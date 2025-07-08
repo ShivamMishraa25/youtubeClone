@@ -7,9 +7,9 @@ import {
 import { protect } from '../middleware/authMiddleware.js';
 
 function commentRoutes(app) {
-    app.post('/', protect, addComment);
-    app.get('/video/:videoId', getCommentsByVideo);
-    app.delete('/:id', protect, deleteComment);
+    app.post('/api/comment', protect, addComment);
+    app.get('/api/comment/:videoId', getCommentsByVideo);
+    app.delete('/api/comment/:id', protect, deleteComment);
 }
 
 export default commentRoutes;

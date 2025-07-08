@@ -69,8 +69,13 @@ export const deleteVideo = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized" });
 
     await video.remove();
+    await ChannelModel.findByIdAndUpdate(channel._id, {
+      $pull: { videos: video._id }
+    });
+
     res.json({ message: "Video deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
