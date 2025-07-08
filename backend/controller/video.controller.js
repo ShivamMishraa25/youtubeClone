@@ -1,5 +1,6 @@
 import VideoModel from '../model/video.model.js';
 import ChannelModel from '../model/channel.model.js';
+import UserModel from '../model/user.model.js';
 
 export const uploadVideo = async (req, res) => {
   try {
@@ -74,6 +75,125 @@ export const deleteVideo = async (req, res) => {
     });
 
     res.json({ message: "Video deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const likeVideo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const video = await VideoModel.findById(req.params.id);
+    const user = await UserModel.findById(userId);
+
+    if (!video || !user) return res.status(404).json({ message: "Video or user not found" });
+
+    // If already liked, do nothing
+    if (video.likedBy.includes(userId)) {
+      return res.json({ likes: video.likes, dislikes: video.dislikes });
+    }
+
+    // Remove dislike if present
+    if (video.dislikedBy.includes(userId)) {
+      video.dislikedBy.pull(userId);
+      video.dislikes = Math.max(0, video.dislikes - 1);
+    }
+
+    video.likedBy.push(userId);
+    video.likes += 1;
+
+    // Add to user's likedVideos if not present
+    if (!user.likedVideos) user.likedVideos = [];
+    if (!user.likedVideos.includes(video._id)) {
+      user.likedVideos.push(video._id);
+    }
+
+    await video.save();
+    await user.save();
+
+    res.json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const unlikeVideo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const video = await VideoModel.findById(req.params.id);
+    const user = await UserModel.findById(userId);
+
+    if (!video || !user) return res.status(404).json({ message: "Video or user not found" });
+
+    if (video.likedBy.includes(userId)) {
+      video.likedBy.pull(userId);
+      video.likes = Math.max(0, video.likes - 1);
+    }
+
+    // Remove from user's likedVideos
+    if (user.likedVideos && user.likedVideos.includes(video._id)) {
+      user.likedVideos.pull(video._id);
+    }
+
+    await video.save();
+    await user.save();
+
+    res.json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const dislikeVideo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const video = await VideoModel.findById(req.params.id);
+    const user = await UserModel.findById(userId);
+
+    if (!video || !user) return res.status(404).json({ message: "Video or user not found" });
+
+    // If already disliked, do nothing
+    if (video.dislikedBy.includes(userId)) {
+      return res.json({ likes: video.likes, dislikes: video.dislikes });
+    }
+
+    // Remove like if present
+    if (video.likedBy.includes(userId)) {
+      video.likedBy.pull(userId);
+      video.likes = Math.max(0, video.likes - 1);
+      // Remove from user's likedVideos
+      if (user.likedVideos && user.likedVideos.includes(video._id)) {
+        user.likedVideos.pull(video._id);
+      }
+    }
+
+    video.dislikedBy.push(userId);
+    video.dislikes += 1;
+
+    await video.save();
+    await user.save();
+
+    res.json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const undislikeVideo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const video = await VideoModel.findById(req.params.id);
+
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    if (video.dislikedBy.includes(userId)) {
+      video.dislikedBy.pull(userId);
+      video.dislikes = Math.max(0, video.dislikes - 1);
+    }
+
+    await video.save();
+
+    res.json({ likes: video.likes, dislikes: video.dislikes });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

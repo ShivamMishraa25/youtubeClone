@@ -4,7 +4,11 @@ import {
   getAllVideos,
   getVideoById,
   getVideosByChannel,
-  deleteVideo
+  deleteVideo,
+  likeVideo,
+  unlikeVideo,
+  dislikeVideo,
+  undislikeVideo
 } from '../controller/video.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -14,6 +18,12 @@ function videoRoutes(app) {
     app.get('/api/video/:id', getVideoById);
     app.get('/api/videos/:channelId', getVideosByChannel);
     app.delete('/api/video/:id', protect, deleteVideo);
+
+    // Like/dislike endpoints
+    app.patch('/api/video/:id/like', protect, likeVideo);
+    app.patch('/api/video/:id/unlike', protect, unlikeVideo);
+    app.patch('/api/video/:id/dislike', protect, dislikeVideo);
+    app.patch('/api/video/:id/undislike', protect, undislikeVideo);
 }
 
 export default videoRoutes;

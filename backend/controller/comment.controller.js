@@ -39,8 +39,29 @@ export const deleteComment = async (req, res) => {
     if (comment.user.toString() !== req.user.id)
       return res.status(403).json({ message: "Unauthorized" });
 
+    // Remove comment reference from the video
+    await VideoModel.findByIdAndUpdate(comment.video, {
+      $pull: { comments: comment._id }
+    });
+
     await comment.remove();
     res.json({ message: "Comment deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const editComment = async (req, res) => {
+  try {
+    const comment = await CommentModel.findById(req.params.id);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+    if (comment.user.toString() !== req.user.id)
+      return res.status(403).json({ message: "Unauthorized" });
+
+    comment.text = req.body.text;
+    await comment.save();
+    res.json(comment);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

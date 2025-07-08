@@ -19,7 +19,6 @@ function VideoList({ sidebarOpen }) {
         };
         fetchVideos();
     }, []);
-    console.log(videos);
 
     const filteredVideos = selectedCategory === "All"
         ? videos

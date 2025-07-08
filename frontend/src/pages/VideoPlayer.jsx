@@ -1,125 +1,210 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import '../css/videoPlayer.css'
 import { Link, useParams } from 'react-router-dom'
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike } from "react-icons/ai";
 import { IoMdShare } from "react-icons/io";
 import { MdDownload } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 function VideoPlayer() {
     const { videoId } = useParams();
-    // const isLiked = user?.likedVideos?.includes(videoId); // this will be used later
-
-    const video = {
-        _id: "video123",
-        title: "Learn React in 30 Minutes",
-        description: `This is a beginner tutorial on React fundamentals. Lörem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lörem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.`,
-        videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-        thumbnail: "https://placehold.co/360x202.png?text=React+Thumbnail",
-        channel: {
-            _id: "channel01",
-            channelName: "Code with John",
-            channelPic: "https://placehold.co/50x50.png?text=John",
-            channelBanner: "https://placehold.co/300x100.png?text=Banner",
-            subscribers: 5200
-        },
-        views: 15200,
-        likes: 340,
-        dislikes: 12,
-        uploadDate: "2024-09-20",
-        comments: [
-            {
-                _id: "c1",
-                username: "Alice",
-                avatar: "https://placehold.co/40x40.png?text=A",
-                text: "Great video! Helped a lot.",
-                timestamp: "2024-09-21T08:30:00Z"
-            },
-            {
-                _id: "c2",
-                username: "Bob",
-                avatar: "https://placehold.co/40x40.png?text=B",
-                text: "Nice explanation!",
-                timestamp: "2024-09-21T10:15:00Z"
-            }
-        ]
-    };
-
+    const { user } = useAuth();
+    const [video, setVideo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [liked, setLiked] = useState(false);
     const [disliked, setDisliked] = useState(false);
-    const [likeCount, setLikeCount] = useState(video.likes);
-    const [dislikeCount, setDislikeCount] = useState(video.dislikes);
+    const [likeCount, setLikeCount] = useState(0);
+    const [dislikeCount, setDislikeCount] = useState(0);
     const [descExpanded, setDescExpanded] = useState(false);
     const [comment, setComment] = useState("");
-    const [comments, setComments] = useState(video.comments);
-    const [menuOpen, setMenuOpen] = useState(null); // comment id for open menu
+    const [comments, setComments] = useState([]);
+    const [menuOpen, setMenuOpen] = useState(null);
     const [editId, setEditId] = useState(null);
     const [editText, setEditText] = useState("");
 
-    // Simulate current user
-    const currentUser = {
-        username: "You",
-        avatar: "https://placehold.co/40.png?text=Y"
-    };
+    // Fetch video and comments
+    useEffect(() => {
+        setLoading(true);
+        setError(null);
+        Promise.all([
+            axios.get(`http://localhost:5100/api/video/${videoId}`),
+            axios.get(`http://localhost:5100/api/comment/${videoId}`)
+        ])
+            .then(([videoRes, commentRes]) => {
+                setVideo(videoRes.data);
+                setLikeCount(videoRes.data.likes || 0);
+                setDislikeCount(videoRes.data.dislikes || 0);
+                setComments(
+                    (commentRes.data || []).map(c => ({
+                        _id: c._id,
+                        username: c.user?.username || "Unknown",
+                        avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
+                        text: c.text,
+                        timestamp: c.timestamp || c.createdAt,
+                        userId: c.user?._id
+                    }))
+                );
+                // Set liked/disliked state based on backend
+                if (user) {
+                    setLiked(videoRes.data.likedBy?.includes(user._id));
+                    setDisliked(videoRes.data.dislikedBy?.includes(user._id));
+                } else {
+                    setLiked(false);
+                    setDisliked(false);
+                }
+            })
+            .catch(err => {
+                setError("Failed to load video.");
+            })
+            .finally(() => setLoading(false));
+    }, [videoId, user]);
 
-    const handleLike = () => {
-        if (liked) {
-            setLiked(false);
-            setLikeCount(likeCount - 1);
-        } else {
-            setLiked(true);
-            setLikeCount(likeCount + 1);
-            if (disliked) {
-                setDisliked(false);
-                setDislikeCount(dislikeCount - 1);
-            }
-        }
-    };
-
-    const handleDislike = () => {
-        if (disliked) {
-            setDisliked(false);
-            setDislikeCount(dislikeCount - 1);
-        } else {
-            setDisliked(true);
-            setDislikeCount(dislikeCount + 1);
+    // Like/dislike logic (persist to backend)
+    const handleLike = async () => {
+        if (!user) return;
+        try {
             if (liked) {
+                const res = await axios.patch(
+                    `http://localhost:5100/api/video/${videoId}/unlike`,
+                    {},
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
                 setLiked(false);
-                setLikeCount(likeCount - 1);
+                setLikeCount(res.data.likes);
+                setDislikeCount(res.data.dislikes);
+            } else {
+                const res = await axios.patch(
+                    `http://localhost:5100/api/video/${videoId}/like`,
+                    {},
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
+                setLiked(true);
+                setDisliked(false);
+                setLikeCount(res.data.likes);
+                setDislikeCount(res.data.dislikes);
             }
+        } catch (err) {
+            alert("Failed to update like");
         }
     };
 
-    const handleComment = () => {
-        if (comment.trim()) {
-            setComments([
-                {
-                    _id: Date.now().toString(),
-                    username: currentUser.username,
-                    avatar: currentUser.avatar,
-                    text: comment,
-                    timestamp: new Date().toISOString()
-                },
-                ...comments
-            ]);
+    const handleDislike = async () => {
+        if (!user) return;
+        try {
+            if (disliked) {
+                const res = await axios.patch(
+                    `http://localhost:5100/api/video/${videoId}/undislike`,
+                    {},
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
+                setDisliked(false);
+                setLikeCount(res.data.likes);
+                setDislikeCount(res.data.dislikes);
+            } else {
+                const res = await axios.patch(
+                    `http://localhost:5100/api/video/${videoId}/dislike`,
+                    {},
+                    { headers: { Authorization: `Bearer ${user.token}` } }
+                );
+                setDisliked(true);
+                setLiked(false);
+                setLikeCount(res.data.likes);
+                setDislikeCount(res.data.dislikes);
+            }
+        } catch (err) {
+            alert("Failed to update dislike");
+        }
+    };
+
+    // Add comment logic (POST to backend, then fetch comments)
+    const handleComment = async () => {
+        if (!user || !comment.trim()) return;
+        try {
+            await axios.post(
+                "http://localhost:5100/api/comment",
+                { text: comment, videoId },
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
+            // Fetch updated comments from backend
+            const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            setComments(
+                (res.data || []).map(c => ({
+                    _id: c._id,
+                    username: c.user?.username || "Unknown",
+                    avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
+                    text: c.text,
+                    timestamp: c.timestamp || c.createdAt,
+                    userId: c.user?._id
+                }))
+            );
             setComment("");
+        } catch (err) {
+            alert("Failed to add comment");
         }
     };
 
+    // Delete comment logic (DELETE to backend, then fetch comments)
+    const handleDelete = async (id) => {
+        if (!user) return;
+        if (!window.confirm("Delete this comment?")) return;
+        try {
+            await axios.delete(
+                `http://localhost:5100/api/comment/${id}`,
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
+            // Always fetch updated comments from backend after delete
+            const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            setComments(
+                (res.data || []).map(c => ({
+                    _id: c._id,
+                    username: c.user?.username || "Unknown",
+                    avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
+                    text: c.text,
+                    timestamp: c.timestamp || c.createdAt,
+                    userId: c.user?._id
+                }))
+            );
+            setMenuOpen(null);
+        } catch (err) {
+            alert("Failed to delete comment");
+        }
+    };
+
+    // Edit comment logic (PATCH to backend, then fetch comments)
     const handleEdit = (comment) => {
         setEditId(comment._id);
         setEditText(comment.text);
         setMenuOpen(null);
     };
 
-    const handleEditSave = (id) => {
-        setComments(comments =>
-            comments.map(c =>
-                c._id === id ? { ...c, text: editText } : c
-            )
-        );
-        setEditId(null);
-        setEditText("");
+    const handleEditSave = async (id) => {
+        if (!user || !editText.trim()) return;
+        try {
+            await axios.patch(
+                `http://localhost:5100/api/comment/${id}`,
+                { text: editText },
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
+            // Fetch updated comments from backend
+            const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            setComments(
+                (res.data || []).map(c => ({
+                    _id: c._id,
+                    username: c.user?.username || "Unknown",
+                    avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
+                    text: c.text,
+                    timestamp: c.timestamp || c.createdAt,
+                    userId: c.user?._id
+                }))
+            );
+            setEditId(null);
+            setEditText("");
+        } catch (err) {
+            alert("Failed to edit comment");
+        }
     };
 
     const handleEditCancel = () => {
@@ -127,17 +212,16 @@ function VideoPlayer() {
         setEditText("");
     };
 
-    const handleDelete = (id) => {
-        if (window.confirm("Delete this comment?")) {
-            setComments(comments => comments.filter(c => c._id !== id));
-            setMenuOpen(null);
-        }
-    };
-
     // Description logic
     const descLimit = 180;
-    const showMore = video.description.length > descLimit;
-    const descToShow = descExpanded ? video.description : video.description.slice(0, descLimit);
+    const showMore = video && video.description && video.description.length > descLimit;
+    const descToShow = video && video.description
+        ? (descExpanded ? video.description : video.description.slice(0, descLimit))
+        : "";
+
+    if (loading) return <div style={{ padding: 32 }}>Loading...</div>;
+    if (error) return <div style={{ padding: 32, color: 'red' }}>{error}</div>;
+    if (!video) return null;
 
     return (
         <div className="video-player-page light">
@@ -154,12 +238,12 @@ function VideoPlayer() {
                 <div className="video-player-row">
                     <div className="video-player-channel-row">
                         <Link to={`/channels/:${video?.channel?._id}`}>
-                            <img src={video.channel.channelPic} alt={video.channel.channelName} className="video-player-channel-pic" />
+                            <img src={video.channel?.channelPic} alt={video.channel?.channelName} className="video-player-channel-pic" />
                         </Link>
                         <Link to={`/channels/:${video?.channel?._id}`}>
                             <div className="video-player-channel-info">
-                                <div className="video-player-channel-name">{video.channel.channelName}</div>
-                                <div className="video-player-subscribers">{video.channel.subscribers.toLocaleString()} subscribers</div>
+                                <div className="video-player-channel-name">{video.channel?.channelName}</div>
+                                <div className="video-player-subscribers">{video.channel?.subscribers?.toLocaleString() || 0} subscribers</div>
                             </div>
                         </Link>
                         <button className="video-player-subscribe-btn">Subscribe</button>
@@ -168,6 +252,8 @@ function VideoPlayer() {
                         <button
                             className={`video-player-action-btn${liked ? ' active' : ''}`}
                             onClick={handleLike}
+                            disabled={!user}
+                            title={!user ? "Login to like" : ""}
                         >
                             {liked ? <AiFillLike /> : <AiOutlineLike />}
                             <span>{likeCount}</span>
@@ -175,6 +261,8 @@ function VideoPlayer() {
                         <button
                             className={`video-player-action-btn${disliked ? ' active' : ''}`}
                             onClick={handleDislike}
+                            disabled={!user}
+                            title={!user ? "Login to dislike" : ""}
                         >
                             {disliked ? <AiFillDislike /> : <AiOutlineDislike />}
                             <span>{dislikeCount}</span>
@@ -194,9 +282,9 @@ function VideoPlayer() {
                 </div>
                 <div className="video-player-description">
                     <div className="video-player-desc-meta">
-                        <span className="video-player-desc-views">{video.views.toLocaleString()} views</span>
+                        <span className="video-player-desc-views">{(video.views || 0).toLocaleString()} views</span>
                         <span className="video-player-desc-dot">•</span>
-                        <span className="video-player-desc-date">{video.uploadDate}</span>
+                        <span className="video-player-desc-date">{video.uploadDate ? (typeof video.uploadDate === "string" ? video.uploadDate : new Date(video.uploadDate).toLocaleDateString()) : ""}</span>
                     </div>
                     <div className="video-player-desc-text">
                         {descToShow}
@@ -213,18 +301,23 @@ function VideoPlayer() {
                         {comments.length} Comments
                     </div>
                     <div className="video-player-add-comment">
-                        <img src={currentUser.avatar} alt="You" className="video-player-comment-avatar" />
+                        <img
+                            src={user?.avatar || "https://placehold.co/40.png?text=?"}
+                            alt={user?.username || "User"}
+                            className="video-player-comment-avatar"
+                        />
                         <input
                             className="video-player-comment-input"
-                            placeholder="Add a comment..."
+                            placeholder={user ? "Add a comment..." : "Login to comment"}
                             value={comment}
                             onChange={e => setComment(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") handleComment(); }}
+                            disabled={!user}
                         />
                         <button
                             className="video-player-comment-btn"
                             onClick={handleComment}
-                            disabled={!comment.trim()}
+                            disabled={!user || !comment.trim()}
                         >
                             Comment
                         </button>
@@ -237,33 +330,35 @@ function VideoPlayer() {
                                     <div className="video-player-comment-header">
                                         <span className="video-player-comment-username">{comment.username}</span>
                                         <span className="video-player-comment-time">
-                                            {new Date(comment.timestamp).toLocaleDateString()}
+                                            {comment.timestamp ? new Date(comment.timestamp).toLocaleDateString() : ""}
                                         </span>
-                                        <span
-                                            className="comment-meatball"
-                                            tabIndex={0}
-                                            onClick={() =>
-                                                setMenuOpen(menuOpen === comment._id ? null : comment._id)
-                                            }
-                                        >
-                                            <BsThreeDotsVertical />
-                                            {menuOpen === comment._id && comment.username === currentUser.username && (
-                                                <div className="comment-menu-dropdown">
-                                                    <button
-                                                        className="comment-menu-item"
-                                                        onClick={() => handleEdit(comment)}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    <button
-                                                        className="comment-menu-item delete"
-                                                        onClick={() => handleDelete(comment._id)}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </span>
+                                        {user && comment.userId === user._id && (
+                                            <span
+                                                className="comment-meatball"
+                                                tabIndex={0}
+                                                onClick={() =>
+                                                    setMenuOpen(menuOpen === comment._id ? null : comment._id)
+                                                }
+                                            >
+                                                <BsThreeDotsVertical />
+                                                {menuOpen === comment._id && (
+                                                    <div className="comment-menu-dropdown">
+                                                        <button
+                                                            className="comment-menu-item"
+                                                            onClick={() => handleEdit(comment)}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className="comment-menu-item delete"
+                                                            onClick={() => handleDelete(comment._id)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="video-player-comment-text">
                                         {editId === comment._id ? (
