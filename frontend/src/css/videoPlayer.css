@@ -1,7 +1,7 @@
 .video-player-page {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: 0rem;
     padding: 2rem 1rem 2rem 1rem; /* Add 1rem horizontal margin */
     background: #f9f9f9;
     min-height: 100vh;
@@ -328,7 +328,7 @@ body {
 
 .video-player-sidebar {
     flex: 1.2;
-    min-width: 320px;
+    /* min-width: 320px; */
     max-width: 400px;
     padding-left: 1rem;
     display: flex;

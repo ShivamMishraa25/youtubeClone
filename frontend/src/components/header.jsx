@@ -10,11 +10,19 @@ import '../css/homePage.css'
 import '../css/registerLogin.css'
 import UserModal from './UserModal.jsx'
 
-function Header({ sidebarOpen, setSidebarOpen }) {
+function Header({ sidebarOpen, setSidebarOpen, searchedVal, setSearchedVal, onSearch }) {
     const { user, setUser } = useAuth(); // get user from context
     const navigate = useNavigate(); // get useNavigate hook from react-router-dom
     const [showModal, setShowModal] = useState(false);
 
+    function handleSearchInput(e) {
+        setSearchedVal(e.target.value);
+    }
+
+    function handleSearchBtn(e) {
+        e.preventDefault();
+        if (onSearch) onSearch();
+    }
 
     return (
         <header className='header'>
@@ -28,8 +36,8 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 </Link>
             </div>
             <div className='mid'>
-                <input placeholder="Search" />
-                <button><CiSearch /></button>
+                <input placeholder="Search" onChange={handleSearchInput} value={searchedVal} />
+                <button onClick={handleSearchBtn}><CiSearch /></button>
             </div>
             <div className='right'>
                 <RiVideoUploadLine />

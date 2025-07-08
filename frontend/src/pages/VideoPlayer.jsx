@@ -7,6 +7,35 @@ import { MdDownload } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext.jsx';
+import { formatDistanceToNow } from 'date-fns';
+
+const STATIC_RECOMMENDED = [
+    {
+        _id: "686ce89427474c070230d713",
+        title: "React useEffect Demystified",
+        thumbnail: "https://i.ytimg.com/vi/dGcsHMXbSOA/hqdefault.jpg",
+    },
+    {
+        _id: "686ce89427474c070230d714",
+        title: "What is Cloud Computing?",
+        thumbnail: "https://i.ytimg.com/vi/W6NZfCO5SIk/hqdefault.jpg",
+    },
+    {
+        _id: "686ce89427474c070230d710",
+        title: "10 JavaScript Tricks You Should Know",
+        thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?crop=entropy&fm=jpg&h=180&w=300",
+    },
+    {
+        _id: "686ce89427474c070230d712",
+        title: "CSS Grid Layout Tutorial",
+        thumbnail: "https://images.unsplash.com/photo-1517433456452-f9633a875f6f?crop=entropy&fm=jpg&h=180&w=300",
+    },
+    {
+        _id: "686ce89427474c070230d712",
+        title: "Understanding Asynchronous JavaScript",
+        thumbnail: "https://i.ytimg.com/vi/JJSoEo8JSnc/hqdefault.jpg",
+    }
+];
 
 function VideoPlayer() {
     const { videoId } = useParams();
@@ -402,9 +431,30 @@ function VideoPlayer() {
             <div className="video-player-sidebar">
                 <div className="video-player-recommend-title">Up next</div>
                 <div className="video-player-recommend-list">
-                    {/* Placeholder for recommended videos */}
-                    <div className="video-player-recommend-item">Recommended Video 1</div>
-                    <div className="video-player-recommend-item">Recommended Video 2</div>
+                    {STATIC_RECOMMENDED.map(v => (
+                        <Link
+                            to={`/video/${v._id}`}
+                            className="video-player-recommend-item"
+                            key={v._id}
+                            style={{ display: "flex", alignItems: "center", gap: "0.8rem", textDecoration: "none" }}
+                        >
+                            <img
+                                src={v.thumbnail}
+                                alt={v.title}
+                                style={{
+                                    width: 80,
+                                    height: 48,
+                                    objectFit: "cover",
+                                    borderRadius: 6,
+                                    background: "#eee",
+                                    flexShrink: 0
+                                }}
+                            />
+                            <span style={{ color: "#222", fontWeight: 500, fontSize: "1rem", lineHeight: "1.2" }}>
+                                {v.title}
+                            </span>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>
