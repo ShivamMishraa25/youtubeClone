@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Channel' 
     }],
-    channelId: { 
+    channel: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Channel' 
     }

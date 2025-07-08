@@ -18,6 +18,7 @@ function UserModal({ onClose, setShowModal }) {
     };
     const handleCreateChannel = () => {
         navigate("/createChannel");
+        setShowModal(false);
     };
     const handleSignOut = () => {
         localStorage.removeItem('user');

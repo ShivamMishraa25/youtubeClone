@@ -45,7 +45,7 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                     }));
                 setUser({
                 "username": "shivam_dev",
-                "userId": "user01",
+                "_id": "user01",
                 "avatar": "https://placehold.co/40x40.png?text=S",
                 "channelId": "channel01"
                 });}

@@ -41,7 +41,7 @@ export const registerUser = async (req, res) => {
             username: user.username,
             email: user.email,
             avatar: user.avatar,
-            channel: null, // I might have to edit this later for front end integration ---------------------
+            channelId: user.channel ? user.channel.toString() : null, // changed
             token: generateToken(user._id),
         });
     } catch (err) {
@@ -76,7 +76,7 @@ export const loginUser = async (req, res) => {
             username: user.username,
             email: user.email,
             avatar: user.avatar,
-            channel: user.channel,
+            channelId: user.channel ? user.channel.toString() : null, // changed
             token: generateToken(user._id),
         });
     } catch (err) {

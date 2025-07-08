@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import '../css/createChannel.css'
+import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 function CreateChannel() {
     const [form, setForm] = useState({
@@ -8,14 +11,36 @@ function CreateChannel() {
         channelPic: '',
         channelBanner: ''
     });
+    const { user, setUser } = useAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = e => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        // TODO: handle channel creation logic
+        if (!user) {
+            alert("You must be logged in to create a channel.");
+            return;
+        }
+        setLoading(true);
+        try {
+            const { data } = await axios.post(
+                "http://localhost:5100/api/channel",
+                form,
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
+            // Update user context with new channelId
+            setUser({ ...user, channelId: data._id });
+            alert("Channel created!");
+            navigate("/channel");
+        } catch (err) {
+            alert("Failed to create channel: " + (err.response?.data?.message || err.message));
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -81,9 +106,9 @@ function CreateChannel() {
                         <button
                             type="submit"
                             className="create-channel-submit"
-                            disabled={!form.channelName}
+                            disabled={!form.channelName || loading}
                         >
-                            Create channel
+                            {loading ? "Creating..." : "Create channel"}
                         </button>
                     </div>
                     <div className="create-channel-terms">

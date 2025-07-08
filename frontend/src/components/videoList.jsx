@@ -4,7 +4,7 @@ import Video from './Video.jsx';
 import '../css/homePage.css';
 
 function VideoList({ sidebarOpen }) {
-    const categories = ["All", "Programming", "Tech", "Gaming", "Vlogs", "Music", "Design", "AI", "Education"];
+    const categories = ["All", "Programming", "Tech", "Design", "AI", "Gaming", "Vlogs", "Music", "Education"];
     const [videos, setVideos] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
 
