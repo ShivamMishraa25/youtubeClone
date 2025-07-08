@@ -69,7 +69,7 @@ export const deleteVideo = async (req, res) => {
     if (channel.owner.toString() !== req.user.id)
       return res.status(403).json({ message: "Unauthorized" });
 
-    await video.remove();
+    await VideoModel.findByIdAndDelete(video._id);
     await ChannelModel.findByIdAndUpdate(channel._id, {
       $pull: { videos: video._id }
     });
@@ -194,6 +194,30 @@ export const undislikeVideo = async (req, res) => {
     await video.save();
 
     res.json({ likes: video.likes, dislikes: video.dislikes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateVideo = async (req, res) => {
+  try {
+    const video = await VideoModel.findById(req.params.id);
+    if (!video) return res.status(404).json({ message: "Video not found" });
+
+    // Only channel owner can edit
+    const channel = await ChannelModel.findById(video.channel);
+    if (!channel || channel.owner.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    // Update fields
+    const fields = ["title", "description", "videoLink", "thumbnail", "category"];
+    fields.forEach(field => {
+      if (req.body[field] !== undefined) video[field] = req.body[field];
+    });
+
+    await video.save();
+    res.json(video);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

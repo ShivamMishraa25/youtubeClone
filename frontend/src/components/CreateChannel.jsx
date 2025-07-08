@@ -33,7 +33,7 @@ function CreateChannel() {
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             // Update user context with new channelId
-            setUser({ ...user, channelId: data._id });
+            setUser({ ...user, channelId: data.channelId || data._id });
             alert("Channel created!");
             navigate("/channel");
         } catch (err) {

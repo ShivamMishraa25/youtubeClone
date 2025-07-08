@@ -41,7 +41,7 @@ export const registerUser = async (req, res) => {
             username: user.username,
             email: user.email,
             avatar: user.avatar,
-            channelId: user.channel ? user.channel.toString() : null, // changed
+            channelId: user.channel ? user.channel.toString() : null,
             token: generateToken(user._id),
         });
     } catch (err) {
@@ -76,7 +76,7 @@ export const loginUser = async (req, res) => {
             username: user.username,
             email: user.email,
             avatar: user.avatar,
-            channelId: user.channel ? user.channel.toString() : null, // changed
+            channelId: user.channel ? user.channel.toString() : null,
             token: generateToken(user._id),
         });
     } catch (err) {
@@ -88,7 +88,14 @@ export const loginUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
     try {
         const user = await UserModel.findById(req.user.id).populate("channel");
-        res.json(user);
+        res.json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+            channelId: user.channel ? user.channel._id.toString() : null,
+            // add other fields if needed
+        });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: "Server Error" });

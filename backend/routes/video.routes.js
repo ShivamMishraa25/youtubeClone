@@ -8,7 +8,8 @@ import {
   likeVideo,
   unlikeVideo,
   dislikeVideo,
-  undislikeVideo
+  undislikeVideo,
+  updateVideo
 } from '../controller/video.controller.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -24,6 +25,9 @@ function videoRoutes(app) {
     app.patch('/api/video/:id/unlike', protect, unlikeVideo);
     app.patch('/api/video/:id/dislike', protect, dislikeVideo);
     app.patch('/api/video/:id/undislike', protect, undislikeVideo);
+
+    // Update video endpoint
+    app.put('/api/video/:id', protect, updateVideo);
 }
 
 export default videoRoutes;
