@@ -237,10 +237,10 @@ function VideoPlayer() {
                 <div className="video-player-title">{video.title}</div>
                 <div className="video-player-row">
                     <div className="video-player-channel-row">
-                        <Link to={`/channels/:${video?.channel?._id}`}>
+                        <Link to={`/channels/${video?.channel?._id}`}>
                             <img src={video.channel?.channelPic} alt={video.channel?.channelName} className="video-player-channel-pic" />
                         </Link>
-                        <Link to={`/channels/:${video?.channel?._id}`}>
+                        <Link to={`/channels/${video?.channel?._id}`}>
                             <div className="video-player-channel-info">
                                 <div className="video-player-channel-name">{video.channel?.channelName}</div>
                                 <div className="video-player-subscribers">{video.channel?.subscribers?.toLocaleString() || 0} subscribers</div>
@@ -248,7 +248,9 @@ function VideoPlayer() {
                         </Link>
                         <button className="video-player-subscribe-btn">Subscribe</button>
                     </div>
-                    <div className="video-player-actions">
+                    {
+                        user?.channelId&&(
+                            <div className="video-player-actions">
                         <button
                             className={`video-player-action-btn${liked ? ' active' : ''}`}
                             onClick={handleLike}
@@ -279,12 +281,14 @@ function VideoPlayer() {
                             <BsThreeDotsVertical />
                         </button>
                     </div>
+                        )
+                    }
                 </div>
                 <div className="video-player-description">
                     <div className="video-player-desc-meta">
                         <span className="video-player-desc-views">{(video.views || 0).toLocaleString()} views</span>
                         <span className="video-player-desc-dot">•</span>
-                        <span className="video-player-desc-date">{video.uploadDate ? (typeof video.uploadDate === "string" ? video.uploadDate : new Date(video.uploadDate).toLocaleDateString()) : ""}</span>
+                        <span className="video-player-desc-date">{video.uploadDate ? new Date(video.uploadDate).toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}): ""}</span>
                     </div>
                     <div className="video-player-desc-text">
                         {descToShow}

@@ -32,24 +32,6 @@ function Header({ sidebarOpen, setSidebarOpen }) {
                 <button><CiSearch /></button>
             </div>
             <div className='right'>
-
-
-
-{/* temporary code button ---------------------------------------------------- */}
-                <button onClick={()=>{
-                    localStorage.setItem("user", JSON.stringify({
-                    username: "shivam_dev",
-                    _id: "user01",
-                    avatar: "https://placehold.co/40x40.png?text=S", 
-                    channelId: null // later set to some ID like "channel01"
-                    }));
-                setUser({
-                "username": "shivam_dev",
-                "_id": "user01",
-                "avatar": "https://placehold.co/40x40.png?text=S",
-                "channelId": "channel01"
-                });}
-                }>quick login</button>
                 <RiVideoUploadLine />
                 <FaBell />
                 {user ? (
@@ -75,10 +57,3 @@ function Header({ sidebarOpen, setSidebarOpen }) {
 }
 
 export default Header
-
-// localStorage.setItem("user", JSON.stringify({
-//   _id: "user01",
-//   username: "shivam_dev",
-//   avatar: "https://placehold.co/40x40.png?text=S", 
-//   channelId: null // later set to some ID like "channel01"
-// }));

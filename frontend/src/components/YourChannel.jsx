@@ -362,9 +362,7 @@ function YourChannel() {
               <div className="channel-video-meta">
                 <span>{video.views} views</span>
                 <span className="channel-dot">·</span>
-                <span>{typeof video.uploadDate === "string"
-                  ? video.uploadDate
-                  : new Date(video.uploadDate).toLocaleDateString()}</span>
+                <span>{video.uploadDate? new Date(video.uploadDate).toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}): ""}</span>
               </div>
             </div>
             <div className="channel-video-actions">

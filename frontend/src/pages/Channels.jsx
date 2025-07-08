@@ -1,70 +1,61 @@
-import React, { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import '../css/channel.css'
 import { BsThreeDotsVertical } from "react-icons/bs";
+import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 function Channels() {
     const { id } = useParams();
-
-    // Dummy data for demonstration
-    const channel = {
-        _id: "channel02",
-        channelName: "Tech Explained",
-        description: "Explaining tech simply. Lörem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-        channelPic: "https://placehold.co/100x100.png?text=TE",
-        channelBanner: "https://placehold.co/600x150.png?text=Tech+Explained",
-        owner: "user02",
-        subscribers: 980,
-        videos: [
-            {
-                _id: "video456",
-                title: "JavaScript in 10 Minutes",
-                videoLink: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-                thumbnail: "https://placehold.co/150x100.png?text=JS",
-                description: "Fast-paced JS tutorial.",
-                views: 4200,
-                likes: 210,
-                dislikes: 7,
-                uploadDate: "2024-09-25"
-            },
-            {
-                _id: "video457",
-                title: "What is the Cloud?",
-                videoLink: "https://filesamples.com/samples/video/mp4/sample_640x360.mp4",
-                thumbnail: "https://placehold.co/150x100.png?text=Cloud",
-                description: "Explaining cloud computing in layman's terms.",
-                views: 6700,
-                likes: 330,
-                dislikes: 12,
-                uploadDate: "2024-09-26"
-            }
-        ]
-    };
-
+    const [channel, setChannel] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [descExpanded, setDescExpanded] = useState(false);
+    const { user, setUser } = useAuth();
+    const navigate = useNavigate();
+
+    if(user?.channelId == id) navigate("/channel");
+
+    useEffect(() => {
+        setLoading(true);
+        setError(null);
+        axios.get(`http://localhost:5100/api/channel/${id.replace(':', '')}`)
+            .then(res => {
+                setChannel(res.data);
+            })
+            .catch(() => setError("Failed to load channel"))
+            .finally(() => setLoading(false));
+    }, [id]);
+
+    if (loading) return <div style={{ padding: 32 }}>Loading...</div>;
+    if (error) return <div style={{ padding: 32, color: 'red' }}>{error}</div>;
+    if (!channel) return null;
+
     const descLimit = 180;
-    const showMore = channel.description.length > descLimit;
-    const descToShow = descExpanded ? channel.description : channel.description.slice(0, descLimit);
+    const showMore = channel.description && channel.description.length > descLimit;
+    const descToShow = descExpanded || !showMore
+        ? channel.description
+        : channel.description.slice(0, descLimit);
 
     return (
         <div className="channel-page" style={{ flex: 1 }}>
             <div className="channel-banner-container">
                 <img
                     className="channel-banner"
-                    src={channel.channelBanner}
+                    src={channel.channelBanner || "https://placehold.co/600x150.png?text=Banner"}
                     alt="Channel banner"
                 />
             </div>
             <div className="channel-header">
-                <img className="channel-avatar" src={channel.channelPic} alt={channel.channelName} />
+                <img className="channel-avatar" src={channel.channelPic || "https://placehold.co/100x100.png?text=?"} alt={channel.channelName} />
                 <div className="channel-info">
                     <div className="channel-title">{channel.channelName}</div>
                     <div className="channel-meta">
-                        <span className="channel-handle">@{channel.channelName.toLowerCase().replace(/\s/g, '')}-ic4ou</span>
+                        <span className="channel-handle">@{channel.channelName?.toLowerCase().replace(/\s/g, '')}-ic4ou</span>
                         <span className="channel-dot">·</span>
                         <span className="channel-subs">{channel.subscribers} subscribers</span>
                         <span className="channel-dot">·</span>
-                        <span className="channel-videos">{channel.videos.length} videos</span>
+                        <span className="channel-videos">{channel.videos?.length || 0} videos</span>
                     </div>
                     <div className="channel-desc">
                         {descToShow}
@@ -88,7 +79,7 @@ function Channels() {
                 <div className="channel-tab">Posts</div>
             </div>
             <div className="channel-videos-list">
-                {channel.videos.map(video => (
+                {(channel.videos || []).map(video => (
                     <div className="channel-video-card" key={video._id}>
                         <Link to={`/video/${video._id}`}>
                             <img className="channel-video-thumb" src={video.thumbnail} alt={video.title} />
@@ -98,7 +89,7 @@ function Channels() {
                             <div className="channel-video-meta">
                                 <span>{video.views} views</span>
                                 <span className="channel-dot">·</span>
-                                <span>{video.uploadDate}</span>
+                                <span>{video.uploadDate? new Date(video.uploadDate).toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}): ""}</span>
                             </div>
                         </div>
                         <div className="channel-video-actions">
