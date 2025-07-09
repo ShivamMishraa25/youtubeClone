@@ -436,4 +436,15 @@ body {
     .videoList {
         padding: 1rem;
     }
+    .filter-options {
+        padding: 1rem 4rem 0.7rem 1rem;
+    }
+}
+@media(max-width: 452px) {
+    .header .mid input {
+        width: 1px;
+    }
+    .header {
+        padding: 0 0.2rem 0 1rem;
+    }
 }

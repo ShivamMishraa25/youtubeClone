@@ -135,11 +135,19 @@
     margin-left: auto;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .user-modal {
         min-width: 90vw;
         max-width: 98vw;
         margin-right: 0.5rem;
         max-height: 85vh;
+    }
+} */
+
+@media(max-width: 452px) {
+    .user-modal {
+        margin-right: 0;
+        max-height: 85vh;
+        max-width: 70vw;
     }
 }

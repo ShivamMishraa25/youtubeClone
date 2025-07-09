@@ -436,3 +436,40 @@ body {
         padding-left: 0;
     }
 }
+
+@media(max-width: 956px) {
+    .video-player-row .static-btn {
+        display: none;
+    }
+}
+
+@media(max-width: 622px) {
+    .video-player-row {
+        flex-direction: column;
+        gap : 0.5rem;
+        border-bottom: 0;
+        padding-bottom: 0;
+        margin-bottom: 1rem;
+    }
+    .video-player-row .static-btn {
+        display: flex;
+    }
+    .video-player-channel-row {
+        width: 100%;
+        justify-content: start;
+    }
+    .video-player-actions {
+        width: 100%;
+        justify-content: start;
+        overflow-x: auto;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+@media(max-width: 460px) {
+    .video-player-comment-input {
+        max-width: 150px;
+    }
+}

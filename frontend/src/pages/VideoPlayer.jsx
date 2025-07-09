@@ -279,7 +279,7 @@ function VideoPlayer() {
                             <MdDownload />
                             <span>Download</span>
                         </button>
-                        <button className="video-player-action-btn static-btn">
+                        <button className="video-player-action-btn static-button">
                             <BsThreeDotsVertical />
                         </button>
                     </div>
