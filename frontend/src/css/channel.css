@@ -197,7 +197,7 @@
 
 .channel-videos-list {
     width: 100%;
-    max-width: 1100px;
+    /* max-width: 1100px; */
     margin: 1.5rem auto 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -316,6 +316,132 @@
 
 .channel-video-dropdown-item.delete {
     color: #e53935;
+}
+
+.edit-channel-modal-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.18);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Prevent background scroll when modal is open */
+    overflow: hidden;
+}
+
+.edit-channel-modal {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+    padding: 2rem 2.5rem;
+    min-width: 340px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.edit-channel-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: #222;
+}
+
+.edit-channel-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.edit-channel-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 0.2rem;
+}
+
+.edit-channel-input {
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    outline: none;
+    transition: border 0.13s;
+}
+
+.edit-channel-input:focus {
+    border: 1.5px solid #065fd4;
+}
+
+.edit-channel-banner-preview {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.7rem;
+    background: #eee;
+}
+
+.edit-channel-avatar-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eee;
+    margin-bottom: 0.7rem;
+    border: 2px solid #e5e5e5;
+}
+
+.edit-channel-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.edit-channel-cancel {
+    background: #fff;
+    color: #065fd4;
+    border: 1.5px solid #065fd4;
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+}
+
+.edit-channel-cancel:hover {
+    background: #e3f0ff;
+}
+
+.edit-channel-save {
+    background: #065fd4;
+    color: #fff;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+}
+
+.edit-channel-save:disabled {
+    background: #b3d3fa;
+    color: #fff;
+    cursor: not-allowed;
 }
 
 @keyframes fadeIn {

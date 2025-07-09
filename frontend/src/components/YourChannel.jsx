@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../css/channel.css'
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { MdEdit, MdDelete, MdUpload } from "react-icons/md";
+import { MdEdit, MdDelete, MdUpload, MdSave, MdClose } from "react-icons/md";
 import { Link, useOutletContext } from 'react-router-dom'
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext.jsx';
@@ -31,6 +31,16 @@ function YourChannel() {
   };
   const [form, setForm] = useState(initialForm);
   const [formLoading, setFormLoading] = useState(false);
+
+  // Channel edit modal state
+  const [showEditChannel, setShowEditChannel] = useState(false);
+  const [channelEditForm, setChannelEditForm] = useState({
+    channelName: "",
+    channelBanner: "",
+    channelPic: "",
+    description: ""
+  });
+  const [channelEditLoading, setChannelEditLoading] = useState(false);
 
   // Fetch channel and videos
   useEffect(() => {
@@ -139,6 +149,41 @@ function YourChannel() {
     }
   };
 
+  // Prepare channel edit form when opening modal
+  const openEditChannelModal = () => {
+    setChannelEditForm({
+      channelName: channel.channelName || "",
+      channelBanner: channel.channelBanner || "",
+      channelPic: channel.channelPic || "",
+      description: channel.description || ""
+    });
+    setShowEditChannel(true);
+  };
+
+  const handleChannelEditChange = e => {
+    setChannelEditForm({ ...channelEditForm, [e.target.name]: e.target.value });
+  };
+
+  const handleChannelEditSave = async (e) => {
+    e.preventDefault();
+    setChannelEditLoading(true);
+    try {
+      await axios.put(
+        `http://localhost:5100/api/updateChannel/${channel._id}`,
+        channelEditForm,
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      // Refresh channel data
+      const res = await axios.get(`http://localhost:5100/api/channel/${user.channelId}`);
+      setChannel(res.data);
+      setShowEditChannel(false);
+    } catch (err) {
+      alert("Failed to update channel: " + (err.response?.data?.message || err.message));
+    } finally {
+      setChannelEditLoading(false);
+    }
+  };
+
   const handleFormChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -149,6 +194,84 @@ function YourChannel() {
 
   return (
     <div className="channel-page" style={{ flex: 1 }}>
+      {/* Channel Edit Modal */}
+      {showEditChannel && (
+        <div className="edit-channel-modal-bg">
+          <div className="edit-channel-modal">
+            <h2 className="edit-channel-title">Edit Channel Details</h2>
+            <form className="edit-channel-form" onSubmit={handleChannelEditSave}>
+              <label className="edit-channel-label">Channel Name</label>
+              <input
+                className="edit-channel-input"
+                name="channelName"
+                type="text"
+                placeholder="Channel name"
+                value={channelEditForm.channelName}
+                onChange={handleChannelEditChange}
+                required
+                autoFocus
+              />
+              <label className="edit-channel-label">Description</label>
+              <textarea
+                className="edit-channel-input"
+                name="description"
+                placeholder="Channel description"
+                value={channelEditForm.description}
+                onChange={handleChannelEditChange}
+                rows={3}
+              />
+              <label className="edit-channel-label">Banner URL</label>
+              <input
+                className="edit-channel-input"
+                name="channelBanner"
+                type="url"
+                placeholder="Banner image URL"
+                value={channelEditForm.channelBanner}
+                onChange={handleChannelEditChange}
+              />
+              <img
+                src={channelEditForm.channelBanner || "https://placehold.co/600x150.png?text=Banner"}
+                alt="Banner preview"
+                className="edit-channel-banner-preview"
+              />
+              <label className="edit-channel-label">Channel Picture URL</label>
+              <input
+                className="edit-channel-input"
+                name="channelPic"
+                type="url"
+                placeholder="Channel picture URL"
+                value={channelEditForm.channelPic}
+                onChange={handleChannelEditChange}
+              />
+              <img
+                src={channelEditForm.channelPic || "https://placehold.co/100x100.png?text=?"}
+                alt="Avatar preview"
+                className="edit-channel-avatar-preview"
+              />
+              <div className="edit-channel-actions">
+                <button
+                  type="button"
+                  className="edit-channel-cancel"
+                  onClick={() => setShowEditChannel(false)}
+                  disabled={channelEditLoading}
+                >
+                  <MdClose style={{ marginRight: 6 }} />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="edit-channel-save"
+                  disabled={channelEditLoading || !channelEditForm.channelName}
+                >
+                  <MdSave style={{ marginRight: 6 }} />
+                  {channelEditLoading ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Upload Modal */}
       {showUpload && (
         <div className="create-channel-modal-bg" style={{ zIndex: 3000 }}>
@@ -339,7 +462,9 @@ function YourChannel() {
               <MdUpload style={{ marginRight: 6, fontSize: "1.2rem" }} />
               Upload video
             </button>
-            <button className="channel-btn secondary">Customize channel</button>
+            <button className="channel-btn" onClick={openEditChannelModal}>
+              Customize channel
+            </button>
             <button className="channel-btn secondary">Manage videos</button>
           </div>
         </div>

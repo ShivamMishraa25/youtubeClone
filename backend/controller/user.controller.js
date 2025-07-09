@@ -23,27 +23,50 @@ export const registerUser = async (req, res) => {
             res.status(400).json({ message: "Avatar is required." });
         }
 
-        const userExists = await UserModel.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
+        // Trim inputs
+        const trimmedUsername = username.trim();
+        const trimmedEmail = email.trim();
+        const trimmedPassword = password.trim();
+        const trimmedAvatar = avatar.trim();
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(trimmedEmail)) {
+        return res.status(400).json({ message: "Invalid email format." });
         }
 
-        const hashed = await bcrypt.hash(password, 10);
+        // Validate password strength
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{6,}$/;
+        if (!passwordRegex.test(trimmedPassword)) {
+        return res.status(400).json({
+            message: "Password must be at least 6 characters long and include 1 uppercase, 1 lowercase, 1 number, and 1 special character.",
+        });
+        }
+
+        // Check if user already exists
+        const userExists = await UserModel.findOne({ email: trimmedEmail });
+        if (userExists) {
+        return res.status(400).json({ message: "User already exists" });
+        }
+
+        // Hash password and create user
+        const hashed = await bcrypt.hash(trimmedPassword, 10);
         const user = await UserModel.create({
-            username,
-            email,
-            password: hashed,
-            avatar,
+        username: trimmedUsername,
+        email: trimmedEmail,
+        password: hashed,
+        avatar: trimmedAvatar,
         });
 
         res.status(201).json({
-            _id: user._id,
-            username: user.username,
-            email: user.email,
-            avatar: user.avatar,
-            channelId: user.channel ? user.channel.toString() : null,
-            token: generateToken(user._id),
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        avatar: user.avatar,
+        channelId: user.channel ? user.channel.toString() : null,
+        token: generateToken(user._id),
         });
+
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: "Server Error" });

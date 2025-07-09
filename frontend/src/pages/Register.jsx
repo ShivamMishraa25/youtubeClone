@@ -18,11 +18,28 @@ function Register() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        // TODO: handle registration logic
+
+        const username = form.username.trim();
+        const email = form.email.trim();
+        const password = form.password.trim();
+        let avatar = form.avatar.trim();
+
+        // Validate required fields
+        if (!username || !email || !password) {
+            alert("Please fill in all required fields without empty spaces.");
+            return;
+        }
+
+        // Auto-generate avatar if blank
+        if (!avatar) {
+            const initial = username.charAt(0).toUpperCase();
+            avatar = `https://placehold.co/40x40.png?text=${initial}`;
+        }
+
         try {
             const { data } = await axios.post(
                 "http://localhost:5100/api/register",
-                form,
+                { username, email, avatar, password },
                 {
                     headers: {
                         "Content-Type": "application/json"
@@ -30,12 +47,12 @@ function Register() {
                 }
             );
 
-            alert("User registered successfully, Please login");
+            alert("✅ User registered successfully, please login.");
             navigate("/login");
 
         } catch (err) {
-            console.error("❌ registration failed:", err.response?.data?.message || err.message);
-            alert("registration failed: " + (err.response?.data?.message || "Something went wrong"));
+            console.error("❌ Registration failed:", err.response?.data?.message || err.message);
+            alert("Registration failed: " + (err.response?.data?.message || "Something went wrong"));
         }
     };
 
@@ -43,6 +60,7 @@ function Register() {
         <div className="auth-container">
             <form className="auth-form" onSubmit={handleSubmit}>
                 <h2 className="auth-title">Create your account</h2>
+
                 <label htmlFor="username">Username</label>
                 <input
                     id="username"
@@ -54,6 +72,7 @@ function Register() {
                     required
                     autoComplete="username"
                 />
+
                 <label htmlFor="email">Email</label>
                 <input
                     id="email"
@@ -65,7 +84,8 @@ function Register() {
                     required
                     autoComplete="email"
                 />
-                <label htmlFor="avatar">Avatar URL</label>
+
+                <label htmlFor="avatar">Avatar URL (optional)</label>
                 <input
                     id="avatar"
                     name="avatar"
@@ -75,6 +95,7 @@ function Register() {
                     onChange={handleChange}
                     autoComplete="photo"
                 />
+
                 <label htmlFor="password">Password</label>
                 <input
                     id="password"
@@ -86,7 +107,9 @@ function Register() {
                     required
                     autoComplete="new-password"
                 />
+
                 <button className="auth-btn" type="submit">Register</button>
+
                 <div className="auth-switch">
                     Already have an account?{' '}
                     <span className="auth-link" onClick={() => navigate('/login')}>Sign in</span>
