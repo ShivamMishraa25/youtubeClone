@@ -105,10 +105,24 @@ function YourChannel() {
   const handleUploadSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
+    // Trim all fields
+    const trimmed = {
+      title: form.title.trim(),
+      videoLink: form.videoLink.trim(),
+      thumbnail: form.thumbnail.trim(),
+      description: form.description.trim(),
+      category: form.category.trim()
+    };
+    // Check required fields
+    if (!trimmed.title || !trimmed.videoLink || !trimmed.thumbnail) {
+      alert("Please fill in all required fields.");
+      setFormLoading(false);
+      return;
+    }
     try {
       await axios.post(
         "http://localhost:5100/api/video",
-        form,
+        trimmed,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
       // Refresh videos
@@ -129,10 +143,24 @@ function YourChannel() {
     e.preventDefault();
     if (!editVideo) return;
     setFormLoading(true);
+    // Trim all fields
+    const trimmed = {
+      title: form.title.trim(),
+      videoLink: form.videoLink.trim(),
+      thumbnail: form.thumbnail.trim(),
+      description: form.description.trim(),
+      category: form.category.trim()
+    };
+    // Check required fields
+    if (!trimmed.title || !trimmed.videoLink || !trimmed.thumbnail) {
+      alert("Please fill in all required fields.");
+      setFormLoading(false);
+      return;
+    }
     try {
       await axios.put(
         `http://localhost:5100/api/video/${editVideo._id}`,
-        form,
+        trimmed,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
       // Refresh videos after update
@@ -167,10 +195,23 @@ function YourChannel() {
   const handleChannelEditSave = async (e) => {
     e.preventDefault();
     setChannelEditLoading(true);
+    // Trim all fields
+    const trimmed = {
+      channelName: channelEditForm.channelName.trim(),
+      channelBanner: channelEditForm.channelBanner.trim(),
+      channelPic: channelEditForm.channelPic.trim(),
+      description: channelEditForm.description.trim()
+    };
+    // Check required fields
+    if (!trimmed.channelName) {
+      alert("Channel name is required.");
+      setChannelEditLoading(false);
+      return;
+    }
     try {
       await axios.put(
         `http://localhost:5100/api/updateChannel/${channel._id}`,
-        channelEditForm,
+        trimmed,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
       // Refresh channel data
@@ -244,7 +285,7 @@ function YourChannel() {
                 onChange={handleChannelEditChange}
               />
               <img
-                src={channelEditForm.channelPic || "https://placehold.co/100x100.png?text=?"}
+                src={channelEditForm.channelPic || "https://placehold.co/100x100.png?text=channel"}
                 alt="Avatar preview"
                 className="edit-channel-avatar-preview"
               />
@@ -438,7 +479,7 @@ function YourChannel() {
         />
       </div>
       <div className="channel-header">
-        <img className="channel-avatar" src={channel.channelPic || "https://placehold.co/100x100.png?text=?"} alt={channel.channelName} />
+        <img className="channel-avatar" src={channel.channelPic || "https://placehold.co/100x100.png?text=channel"} alt={channel.channelName} />
         <div className="channel-info">
           <div className="channel-title">{channel.channelName}</div>
           <div className="channel-meta">

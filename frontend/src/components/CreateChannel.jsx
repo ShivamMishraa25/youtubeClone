@@ -25,11 +25,23 @@ function CreateChannel() {
             alert("You must be logged in to create a channel.");
             return;
         }
+        // Trim all fields
+        const trimmed = {
+            channelName: form.channelName.trim(),
+            description: form.description.trim(),
+            channelPic: form.channelPic.trim(),
+            channelBanner: form.channelBanner.trim()
+        };
+        // Check required fields
+        if (!trimmed.channelName) {
+            alert("Channel name is required.");
+            return;
+        }
         setLoading(true);
         try {
             const { data } = await axios.post(
                 "http://localhost:5100/api/channel",
-                form,
+                trimmed,
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             // Update user context with new channelId
