@@ -7,14 +7,14 @@ This project is for educational purposes and demonstrates a modern video-sharing
 
 ## Live Demo
 
-- **Deployed App:** [https://your-youtube-clone-demo.vercel.app/](https://your-youtube-clone-demo.vercel.app/)
+- **Deployed App:** [http://shivammishraa25.github.io/youtubeClone/](http://shivammishraa25.github.io/youtubeClone/)
 - **Demo Video:** [Watch on YouTube](https://youtu.be/your-demo-video-id)
 
 ---
 
 ## Repository
 
-- **GitHub:** [https://github.com/yourusername/youtube-clone](https://github.com/yourusername/youtube-clone)
+- **GitHub:** [https://github.com/shivammishraa25/youtubeClone](https://github.com/shivammishraa25/youtubeClone)
 
 ---
 

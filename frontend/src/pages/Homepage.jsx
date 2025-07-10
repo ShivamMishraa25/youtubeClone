@@ -1,16 +1,17 @@
 import React from 'react'
-import SideBar from '../components/SideBar.jsx'
-import VideoList from '../components/VideoList.jsx'
-import '../css/homepage.css'
-import { useOutletContext } from 'react-router-dom'
+import VideoList from '../components/VideoList.jsx' // import videoList to show on homePage
+import { useOutletContext } from 'react-router-dom' // import outlet to get sideBar state
+import '../css/homepage.css' // import css for styling
 
+// Homepage: shows video list and handles sidebar state
 function Homepage() {
   const { sidebarOpen } = useOutletContext();
+
   return (
     <div className='homepage'>
-        <VideoList sidebarOpen={sidebarOpen} />
+        <VideoList sidebarOpen={sidebarOpen} /> {/* call VideoList from here and send sideBar prop */}
     </div>
   )
 }
 
-export default Homepage
+export default Homepage; // export homepage component page

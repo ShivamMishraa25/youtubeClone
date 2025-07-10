@@ -1,19 +1,12 @@
 import "./index.css";
-import { StrictMode, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
-import { BsYoutube } from "react-icons/bs";
-import NotFound from "./pages/notFound.jsx";
-// import App from './App.jsx'
-// import VideoPlayer from './pages/VideoPlayer.jsx'
-// import Homepage from './pages/Homepage.jsx'
-// import Register from './pages/register.jsx'
-// import Login from './pages/login.jsx'
-// import CreateChannel from './components/CreateChannel.jsx'
-// import Channel from './pages/Channel.jsx'
-// import Channels from './pages/Channels.jsx'
+import { createBrowserRouter, RouterProvider } from "react-router-dom"; // import router provider
+import { AuthProvider } from "./contexts/AuthContext.jsx"; // import logged in user
+import { StrictMode, lazy, Suspense } from "react"; // import LAZY LOADING and suspense
+import { BsYoutube } from "react-icons/bs"; // import youtube icon from react-icons library
+import NotFound from "./pages/notFound.jsx"; // import not found 404 page
 
+// Lazy load all main pages/components for performance
 const App = lazy(() => import("./App.jsx"));
 const VideoPlayer = lazy(() => import("./pages/VideoPlayer.jsx"));
 const Homepage = lazy(() => import("./pages/Homepage.jsx"));
@@ -23,6 +16,7 @@ const CreateChannel = lazy(() => import("./components/CreateChannel.jsx"));
 const Channel = lazy(() => import("./pages/Channel.jsx"));
 const Channels = lazy(() => import("./pages/Channels.jsx"));
 
+// Custom loading fallback styled like YouTube
 const LoadingFallback = () => (
   <div style={{minHeight: "60vh",display: "flex",flexDirection: "column",alignItems: "center",justifyContent: "center",background: "#fff",}}>
     <div style={{display: "flex",alignItems: "center",marginBottom: 18,}}>
@@ -47,9 +41,10 @@ const LoadingFallback = () => (
   </div>
 );
 
+// Main router configuration with outlet's children and errorElement for 404
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/", // root route for App
     element: (
       <Suspense fallback={<LoadingFallback />}>
         <App />
@@ -57,7 +52,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        path: "/", // homepage
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <Homepage />
@@ -65,7 +60,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/video/:videoId",
+        path: "/video/:videoId", // video player
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <VideoPlayer />
@@ -73,7 +68,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/register",
+        path: "/register", // register form
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <Register />
@@ -81,7 +76,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/login",
+        path: "/login", // login form
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <Login />
@@ -89,7 +84,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/createChannel",
+        path: "/createChannel", // create channel
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <CreateChannel />
@@ -97,7 +92,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/channel",
+        path: "/channel", // create channel and view your channel
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <Channel />
@@ -105,7 +100,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/channels/:id",
+        path: "/channels/:id", // channel of other users
         element: (
           <Suspense fallback={<LoadingFallback />}>
             <Channels />
@@ -113,10 +108,11 @@ const router = createBrowserRouter([
         ),
       },
     ],
-    errorElement: <NotFound />,
+    errorElement: <NotFound />, // not found 404
   },
 ]);
 
+// Render the app with AuthProvider and router
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>

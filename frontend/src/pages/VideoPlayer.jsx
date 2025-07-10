@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import '../css/videoPlayer.css'
 import { Link, useParams } from 'react-router-dom'
+import { STATIC_RECOMMENDED } from '../assets/recommendedVideos.js'; // import recommended videos from Assets
+import { useAuth } from '../contexts/AuthContext.jsx'; // import logged in user from context
+import { formatDistanceToNow } from 'date-fns';
+import '../css/videoPlayer.css' // import css for styling
+import axios from 'axios'; // import axios for calling APIs
+
+// import icons from react-icons library
 import { AiOutlineLike, AiFillLike, AiOutlineDislike, AiFillDislike } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdShare } from "react-icons/io";
 import { MdDownload } from "react-icons/md";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext.jsx';
-import { formatDistanceToNow } from 'date-fns';
-import { STATIC_RECOMMENDED } from '../assets/recommendedVideos.js';
 
+// Video player page: shows video, channel info, comments, recommended videos
 function VideoPlayer() {
     const { videoId } = useParams();
     const { user } = useAuth();
@@ -32,10 +35,14 @@ function VideoPlayer() {
         setLoading(true);
         setError(null);
         Promise.all([
+
+            // axios get method to fetch video and comment from APIs
             axios.get(`http://localhost:5100/api/video/${videoId}`),
             axios.get(`http://localhost:5100/api/comment/${videoId}`)
         ])
             .then(([videoRes, commentRes]) => {
+
+                // set fetched data in states
                 setVideo(videoRes.data);
                 setLikeCount(videoRes.data.likes || 0);
                 setDislikeCount(videoRes.data.dislikes || 0);
@@ -49,7 +56,8 @@ function VideoPlayer() {
                         userId: c.user?._id
                     }))
                 );
-                // Set liked/disliked state based on backend
+
+                // Set liked/disliked state based on backend (if user is logged in only then they can Like/Dislike)
                 if (user) {
                     setLiked(videoRes.data.likedBy?.includes(user._id));
                     setDisliked(videoRes.data.dislikedBy?.includes(user._id));
@@ -59,9 +67,9 @@ function VideoPlayer() {
                 }
             })
             .catch(err => {
-                setError("Failed to load video.");
+                setError("Failed to load video."); // set any errors if caught
             })
-            .finally(() => setLoading(false));
+            .finally(() => setLoading(false)); // finally set loading to false
     }, [videoId, user]);
 
     // Like/dislike logic (persist to backend)
@@ -70,18 +78,18 @@ function VideoPlayer() {
         try {
             if (liked) {
                 const res = await axios.patch(
-                    `http://localhost:5100/api/video/${videoId}/unlike`,
+                    `http://localhost:5100/api/video/${videoId}/unlike`, // API calling to unlike a video
                     {},
-                    { headers: { Authorization: `Bearer ${user.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } } // send JWT token in header
                 );
                 setLiked(false);
                 setLikeCount(res.data.likes);
                 setDislikeCount(res.data.dislikes);
             } else {
                 const res = await axios.patch(
-                    `http://localhost:5100/api/video/${videoId}/like`,
+                    `http://localhost:5100/api/video/${videoId}/like`, // API calling for liking video
                     {},
-                    { headers: { Authorization: `Bearer ${user.token}` } }
+                    { headers: { Authorization: `Bearer ${user.token}` } } // JWT in header
                 );
                 setLiked(true);
                 setDisliked(false);
@@ -89,7 +97,7 @@ function VideoPlayer() {
                 setDislikeCount(res.data.dislikes);
             }
         } catch (err) {
-            alert("Failed to update like");
+            alert("Failed to update like"); // alert if anything goes wrong
         }
     };
 
@@ -98,7 +106,7 @@ function VideoPlayer() {
         try {
             if (disliked) {
                 const res = await axios.patch(
-                    `http://localhost:5100/api/video/${videoId}/undislike`,
+                    `http://localhost:5100/api/video/${videoId}/undislike`, // API calling to unDislike
                     {},
                     { headers: { Authorization: `Bearer ${user.token}` } }
                 );
@@ -107,7 +115,7 @@ function VideoPlayer() {
                 setDislikeCount(res.data.dislikes);
             } else {
                 const res = await axios.patch(
-                    `http://localhost:5100/api/video/${videoId}/dislike`,
+                    `http://localhost:5100/api/video/${videoId}/dislike`, // API calling to dilike
                     {},
                     { headers: { Authorization: `Bearer ${user.token}` } }
                 );
@@ -117,7 +125,7 @@ function VideoPlayer() {
                 setDislikeCount(res.data.dislikes);
             }
         } catch (err) {
-            alert("Failed to update dislike");
+            alert("Failed to update dislike"); // alert if anything goes wrong
         }
     };
 
@@ -126,12 +134,14 @@ function VideoPlayer() {
         if (!user || !comment.trim()) return;
         try {
             await axios.post(
-                "http://localhost:5100/api/comment",
+                "http://localhost:5100/api/comment", // Api for posting new comment
                 { text: comment, videoId },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             // Fetch updated comments from backend
-            const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`); // API for fetching all comments on a video
+            
+            // set newly fetched comments in state
             setComments(
                 (res.data || []).map(c => ({
                     _id: c._id,
@@ -144,17 +154,17 @@ function VideoPlayer() {
             );
             setComment("");
         } catch (err) {
-            alert("Failed to add comment");
+            alert("Failed to add comment"); // alert if commenting failed
         }
     };
 
     // Delete comment logic (DELETE to backend, then fetch comments)
     const handleDelete = async (id) => {
-        if (!user) return;
+        if (!user) return; // if user is not logged in return
         if (!window.confirm("Delete this comment?")) return;
         try {
             await axios.delete(
-                `http://localhost:5100/api/comment/${id}`,
+                `http://localhost:5100/api/comment/${id}`, // API calling for deleting a comment
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
             // Always fetch updated comments from backend after delete
@@ -186,7 +196,7 @@ function VideoPlayer() {
         if (!user || !editText.trim()) return;
         try {
             await axios.patch(
-                `http://localhost:5100/api/comment/${id}`,
+                `http://localhost:5100/api/comment/${id}`, // API calling for updating/editing a comment
                 { text: editText },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
@@ -214,7 +224,7 @@ function VideoPlayer() {
         setEditText("");
     };
 
-    // Description logic
+    // Description expand and collapse logic
     const descLimit = 180;
     const showMore = video && video.description && video.description.length > descLimit;
     const descToShow = video && video.description
@@ -225,6 +235,7 @@ function VideoPlayer() {
     if (error) return <div style={{ padding: 32, color: 'red' }}>{error}</div>;
     if (!video) return null;
 
+    // return JSX
     return (
         <div className="video-player-page light">
             <div className="video-player-main">
@@ -239,6 +250,8 @@ function VideoPlayer() {
                 <div className="video-player-title">{video.title}</div>
                 <div className="video-player-row">
                     <div className="video-player-channel-row">
+
+                        {/* channel pic and name inside Link to the channel */}
                         <Link to={`/channels/${video?.channel?._id}`}>
                             <img src={video.channel?.channelPic} alt={video.channel?.channelName} className="video-player-channel-pic" />
                         </Link>
@@ -251,6 +264,8 @@ function VideoPlayer() {
                         <button className="video-player-subscribe-btn">Subscribe</button>
                     </div>
                     {
+
+                        // only show like/dislike buttons to 'Logged-In Users'
                         user?.channelId&&(
                             <div className="video-player-actions">
                         <button
@@ -293,6 +308,8 @@ function VideoPlayer() {
                         <span className="video-player-desc-date">{video.uploadDate ? new Date(video.uploadDate).toLocaleDateString("en-US", {year: "numeric",month: "long",day: "numeric"}): ""}</span>
                     </div>
                     <div className="video-player-desc-text">
+
+                        {/* description with collapse and expand functionality */}
                         {descToShow}
                         {showMore && !descExpanded && (
                             <span className="desc-more" onClick={() => setDescExpanded(true)}>...more</span>
@@ -302,6 +319,8 @@ function VideoPlayer() {
                         )}
                     </div>
                 </div>
+
+                {/* comment section -------------------------------- */}
                 <div className="video-player-comments">
                     <div className="video-player-comments-title">
                         {comments.length} Comments
@@ -401,10 +420,14 @@ function VideoPlayer() {
                     </div>
                 </div>
             </div>
+
+            {/* recommended video section. video list fetched from assets/recommendedvideos.js */}
             <div className="video-player-sidebar">
                 <div className="video-player-recommend-title">Up next</div>
                 <div className="video-player-recommend-list">
                     {STATIC_RECOMMENDED.map(v => (
+
+                        // link to the video based on :id parameter
                         <Link
                             to={`/video/${v._id}`}
                             className="video-player-recommend-item"
@@ -434,4 +457,4 @@ function VideoPlayer() {
     )
 }
 
-export default VideoPlayer
+export default VideoPlayer; // export videoPlayer app

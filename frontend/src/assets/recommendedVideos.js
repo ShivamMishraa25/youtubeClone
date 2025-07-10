@@ -1,3 +1,4 @@
+// export array of static videos to show in recommendatoins of videoPlayer page.
 export const STATIC_RECOMMENDED = [
     {
         _id: "686ce89427474c070230d713",

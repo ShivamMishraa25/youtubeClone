@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import '../css/channel.css'
+import { Link, useOutletContext } from 'react-router-dom' // import outlet context for getting sideBar
+import axios from 'axios'; // import axios for calling APIs
+import '../css/channel.css' // import css for styling
+import { useAuth } from '../contexts/AuthContext.jsx'; // import authContext for 'Logged-in User'
+
+// import icons from react-icons
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdEdit, MdDelete, MdUpload, MdSave, MdClose } from "react-icons/md";
-import { Link, useOutletContext } from 'react-router-dom'
-import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext.jsx';
 
+// Main component for managing your own channel (videos, edit, upload)
 function YourChannel() {
   const { sidebarOpen } = useOutletContext();
-  const { user } = useAuth();
-  const [channel, setChannel] = useState(null);
-  const [videos, setVideos] = useState([]);
-  const [menuOpen, setMenuOpen] = useState(null);
-  const [descExpanded, setDescExpanded] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user } = useAuth(); // get loggen in user from context
+  const [channel, setChannel] = useState(null); // channel set to null by default
+  const [videos, setVideos] = useState([]); // videos uploaded on channel set to empty by defalt
+  const [menuOpen, setMenuOpen] = useState(null); // meatball menu for videos hidden initially
+  const [descExpanded, setDescExpanded] = useState(false); // description is collapsed by default
+  const [loading, setLoading] = useState(true); // loading is true by default
+  const [error, setError] = useState(null); // error is null initially
 
   // Upload/edit modal state
   const [showUpload, setShowUpload] = useState(false);
@@ -33,7 +36,7 @@ function YourChannel() {
   const [formLoading, setFormLoading] = useState(false);
 
   // Channel edit modal state
-  const [showEditChannel, setShowEditChannel] = useState(false);
+  const [showEditChannel, setShowEditChannel] = useState(false); // channel edit modal hidden by default
   const [channelEditForm, setChannelEditForm] = useState({
     channelName: "",
     channelBanner: "",
@@ -42,39 +45,46 @@ function YourChannel() {
   });
   const [channelEditLoading, setChannelEditLoading] = useState(false);
 
-  // Fetch channel and videos
+  // Fetch channel and videos on mount
   useEffect(() => {
         if (!user?.channelId) return;
         setLoading(true);
         setError(null);
-        axios.get(`http://localhost:5100/api/channel/${user.channelId}`)
+        axios.get(`http://localhost:5100/api/channel/${user.channelId}`) // call API to get channels videos
             .then(res => {
+
+                // set videos and channel into states
                 setChannel(res.data);
                 setVideos(res.data.videos || []);
             })
             .catch(err => {
-                setError("Failed to load channel.");
+                setError("Failed to load channel."); // if any error is caught
             })
-            .finally(() => setLoading(false));
+            .finally(() => setLoading(false)); // finally set loading to false
     }, [user?.channelId]);
 
+
+  // description logic for collapsing and expanding
   const descLimit = 180;
   const showMore = channel && channel.description && channel.description.length > descLimit;
   const descToShow = channel && channel.description
     ? (descExpanded ? channel.description : channel.description.slice(0, descLimit))
     : "";
 
+  // API for deleting a video
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this video?")) return;
     try {
       await axios.delete(
         `http://localhost:5100/api/video/${id}`,
-        { headers: { Authorization: `Bearer ${user.token}` } }
+        { headers: { Authorization: `Bearer ${user.token}` } } // send JWT token in header
       );
+
+      // re-filter the videos on frontend without the deleted video
       setVideos(videos => videos.filter(v => v._id !== id));
       setMenuOpen(null);
     } catch (err) {
-      alert("Failed to delete video");
+      alert("Failed to delete video"); // alert if anything goes wrong
     }
   };
 
@@ -105,7 +115,8 @@ function YourChannel() {
   const handleUploadSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
-    // Trim all fields
+
+    // Trim all fields (validation so empty fields can't be pushed into database)
     const trimmed = {
       title: form.title.trim(),
       videoLink: form.videoLink.trim(),
@@ -113,36 +124,42 @@ function YourChannel() {
       description: form.description.trim(),
       category: form.category.trim()
     };
+
     // Check required fields
     if (!trimmed.title || !trimmed.videoLink || !trimmed.thumbnail) {
       alert("Please fill in all required fields.");
       setFormLoading(false);
       return;
     }
+
+    // API calling for uploading the video
     try {
       await axios.post(
         "http://localhost:5100/api/video",
         trimmed,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
-      // Refresh videos
+      // Refresh videos (get channel again with new video this time)
       const res = await axios.get(`http://localhost:5100/api/channel/${user.channelId}`);
       setChannel(res.data);
       setVideos(res.data.videos || []);
       setShowUpload(false);
       setForm(initialForm);
     } catch (err) {
+
+      // send alert if video could not be uploaded
       alert("Failed to upload video: " + (err.response?.data?.message || err.message));
     } finally {
       setFormLoading(false);
     }
   };
 
-  // Edit video
+  // Edit video logic
   const handleEditSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // stops page from reloading
     if (!editVideo) return;
     setFormLoading(true);
+
     // Trim all fields
     const trimmed = {
       title: form.title.trim(),
@@ -151,6 +168,7 @@ function YourChannel() {
       description: form.description.trim(),
       category: form.category.trim()
     };
+
     // Check required fields
     if (!trimmed.title || !trimmed.videoLink || !trimmed.thumbnail) {
       alert("Please fill in all required fields.");
@@ -159,7 +177,7 @@ function YourChannel() {
     }
     try {
       await axios.put(
-        `http://localhost:5100/api/video/${editVideo._id}`,
+        `http://localhost:5100/api/video/${editVideo._id}`, // API calling for editing videos
         trimmed,
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -188,6 +206,7 @@ function YourChannel() {
     setShowEditChannel(true);
   };
 
+  // controlled input for channel edit form fields
   const handleChannelEditChange = e => {
     setChannelEditForm({ ...channelEditForm, [e.target.name]: e.target.value });
   };
@@ -209,10 +228,10 @@ function YourChannel() {
       return;
     }
     try {
-      await axios.put(
+      await axios.put( // put API for editing channel
         `http://localhost:5100/api/updateChannel/${channel._id}`,
         trimmed,
-        { headers: { Authorization: `Bearer ${user.token}` } }
+        { headers: { Authorization: `Bearer ${user.token}` } } // JWT sent in header
       );
       // Refresh channel data
       const res = await axios.get(`http://localhost:5100/api/channel/${user.channelId}`);
@@ -231,11 +250,12 @@ function YourChannel() {
 
   if (loading) return <div style={{ padding: 32 }}>Loading...</div>;
   if (error) return <div style={{ padding: 32, color: 'red' }}>{error}</div>;
-  if (!channel) return null;
+  if (!channel) return null; // if channel does not exist, show nothing
 
   return (
     <div className="channel-page" style={{ flex: 1 }}>
-      {/* Channel Edit Modal */}
+
+      {/* Channel Edit Modal ------------------------------------------------- */}
       {showEditChannel && (
         <div className="edit-channel-modal-bg">
           <div className="edit-channel-modal">
@@ -313,7 +333,7 @@ function YourChannel() {
         </div>
       )}
 
-      {/* Upload Modal */}
+      {/* Upload Modal ------------------------------------------------- */}
       {showUpload && (
         <div className="create-channel-modal-bg" style={{ zIndex: 3000 }}>
           <div className="create-channel-modal" style={{ maxWidth: 500 }}>
@@ -392,7 +412,7 @@ function YourChannel() {
         </div>
       )}
 
-      {/* Edit Modal */}
+      {/* Edit Modal --------------------------------------------------- */}
       {showEdit && (
         <div className="create-channel-modal-bg" style={{ zIndex: 3000 }}>
           <div className="create-channel-modal" style={{ maxWidth: 500 }}>
@@ -471,6 +491,7 @@ function YourChannel() {
         </div>
       )}
 
+      {/* channel page actually starts here ----------------------------------------------- */}
       <div className="channel-banner-container">
         <img
           className="channel-banner"
@@ -518,6 +539,8 @@ function YourChannel() {
         <div className="channel-tab">Posts</div>
       </div>
       <div className="channel-videos-list">
+
+        {/* map over videos array state to render video cards on channel */}
         {videos.map(video => (
           <div className="channel-video-card" key={video._id}>
             <Link to={`/video/${video._id}`}>
@@ -537,6 +560,8 @@ function YourChannel() {
                 tabIndex={0}
                 onClick={() => setMenuOpen(menuOpen === video._id ? null : video._id)}
               >
+
+                {/* meatball icons for editing and deleting video */}
                 <BsThreeDotsVertical />
                 {menuOpen === video._id && (
                   <div className="channel-video-dropdown">
@@ -557,4 +582,4 @@ function YourChannel() {
   )
 }
 
-export default YourChannel
+export default YourChannel // export yourChannel component

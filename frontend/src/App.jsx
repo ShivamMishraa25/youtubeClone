@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header.jsx';
-import SideBar from './components/SideBar.jsx';
-import './App.css';
-import { Outlet } from 'react-router-dom';
+import Header from './components/Header.jsx'; // import header component
+import SideBar from './components/SideBar.jsx'; // import sidebar component
+import { Outlet } from 'react-router-dom'; // import outlet
+import './App.css'; // import css for styling
 
+// Main App layout: handles sidebar, header, and main content routing
 function App() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [searchedVal, setSearchedVal] = useState("");
@@ -43,6 +44,7 @@ function App() {
 
     return (
         <>
+            {/* Header and sidebar */}
             <Header
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
@@ -51,9 +53,10 @@ function App() {
                 onSearch={handleSearch}
             />
             <div className="app-layout">
-                {/* Conditionally render SideBar or control its visibility with CSS based on isMobile */}
+                {/* Sidebar and main content */}
                 <SideBar sidebarOpen={sidebarOpen} isMobile={isMobile} />
                 <div className="main-content" style={mainContentStyle}>
+                    {/* Outlet for nested routes */}
                     <Outlet context={{
                         sidebarOpen,
                         searchedVal,
@@ -67,4 +70,4 @@ function App() {
     );
 }
 
-export default App;
+export default App; // export app

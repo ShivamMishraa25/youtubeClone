@@ -1,9 +1,12 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import '../css/notFound.css'
-import { BsYoutube } from 'react-icons/bs'
+import { Link } from 'react-router-dom' 
+import { BsYoutube } from 'react-icons/bs' // import youtube icon from react-icons
+import '../css/notFound.css' // import css for styling
 
+// Not Found errorElement page component for 'User Experience' (Link back to Home)
 function NotFound() {
+
+  // return JSX
   return (
     <div className="notfound-container">
       <div className="notfound-logo-row">
@@ -12,6 +15,8 @@ function NotFound() {
       </div>
       <div className="notfound-404">404</div>
       <div className="notfound-message">This page isn't available. Sorry about that.</div>
+
+      {/* Link back to Homepage */}
       <Link to="/" className="notfound-home-link">
         Go to YouTube Home
       </Link>
@@ -19,4 +24,4 @@ function NotFound() {
   )
 }
 
-export default NotFound
+export default NotFound; // export NotFound page component

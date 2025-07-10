@@ -1,3 +1,4 @@
+// dummy videos list. not in use anymore (for developement purposes only)
 export const dummyChannel = {
   _id: "channel01",
   channelName: "Code with Shivam",

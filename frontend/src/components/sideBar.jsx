@@ -1,12 +1,16 @@
 import React from 'react'
-import { IoMdHome } from "react-icons/io";
+import { Link } from 'react-router-dom';
+import '../css/homePage.css' // improt  css for styling
+
+// import youtube, subscribe and home icons from react-icons
 import { SiYoutubeshorts } from "react-icons/si";
 import { MdSubscriptions } from "react-icons/md";
-import '../css/homePage.css'
-import { Link } from 'react-router-dom';
+import { IoMdHome } from "react-icons/io";
 
+// Sidebar navigation component for main app navigation
 function SideBar({ sidebarOpen }) {
     return (
+        // Sidebar expands/collapses based on sidebarOpen prop
         <nav className={`sideBar${sidebarOpen ? '' : ' collapsed'}`}>
             <Link to="/" className="sideBar-item">
                 <IoMdHome />
@@ -24,4 +28,4 @@ function SideBar({ sidebarOpen }) {
     )
 }
 
-export default SideBar
+export default SideBar // export Sidebar component
