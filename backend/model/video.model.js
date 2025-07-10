@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// define schema
 const videoSchema = new mongoose.Schema({
     title: { 
         type: String, 
@@ -28,31 +29,31 @@ const videoSchema = new mongoose.Schema({
         default: 0 
     },
     likedBy: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // array of user _IDs
         ref: "User"
     }],
     dislikedBy: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // array of user _IDs
         ref: "User"
     }],
     uploadDate: { 
         type: Date, 
-        default: Date.now 
+        default: Date.now // upload date
     },
     category: { 
         type: String 
     },
     channel: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // channel _id
         ref: "Channel",
         required: true,
     },
     comments: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId, // array of comment _IDs
         ref: "Comment" 
     }],
-},{ timestamps: true });
+},{ timestamps: true }); // save timestamp
 
-const VideoModel = mongoose.model("Video", videoSchema);
+const VideoModel = mongoose.model("Video", videoSchema); // create model based on the schema
 
-export default VideoModel;
+export default VideoModel; // export model

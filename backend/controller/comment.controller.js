@@ -1,16 +1,21 @@
+// Controller for adding, fetching, editing, and deleting comments
+
 import CommentModel from '../model/comment.model.js';
 import VideoModel from '../model/video.model.js';
 
+// Add a new comment to a video (protected)
 export const addComment = async (req, res) => {
   try {
     const { text, videoId } = req.body;
 
+    // Create comment document
     const comment = await CommentModel.create({
       user: req.user.id,
       video: videoId,
       text
     });
 
+    // Add comment to video's comments array
     await VideoModel.findByIdAndUpdate(videoId, {
       $push: { comments: comment._id }
     });
@@ -21,6 +26,7 @@ export const addComment = async (req, res) => {
   }
 };
 
+// Get all comments for a video (public)
 export const getCommentsByVideo = async (req, res) => {
   try {
     const comments = await CommentModel.find({ video: req.params.videoId })
@@ -31,6 +37,7 @@ export const getCommentsByVideo = async (req, res) => {
   }
 };
 
+// Delete a comment (protected, only comment owner)
 export const deleteComment = async (req, res) => {
   try {
     const comment = await CommentModel.findById(req.params.id);
@@ -54,6 +61,7 @@ export const deleteComment = async (req, res) => {
   }
 };
 
+// Edit a comment (protected, only comment owner)
 export const editComment = async (req, res) => {
   try {
     const comment = await CommentModel.findById(req.params.id);

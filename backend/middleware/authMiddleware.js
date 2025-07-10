@@ -1,6 +1,9 @@
+// Middleware to protect routes using JWT authentication
+
 import jwt from 'jsonwebtoken';
 import UserModel from '../model/user.model.js';
 
+// Protect middleware: checks for JWT token and attaches user to req
 export const protect = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -16,6 +19,7 @@ export const protect = async (req, res, next) => {
     }
 
     try {
+        // Verify JWT token and attach user to req
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = await UserModel.findById(decoded.id).select('-password');
         next();

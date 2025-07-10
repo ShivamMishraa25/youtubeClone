@@ -11,23 +11,21 @@ import {
   undislikeVideo,
   updateVideo
 } from '../controller/video.controller.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js'; // import controllers
 
 function videoRoutes(app) {
-    app.post('/api/video', protect, uploadVideo);
-    app.get('/api/videos', getAllVideos);
-    app.get('/api/video/:id', getVideoById);
-    app.get('/api/videos/:channelId', getVideosByChannel);
-    app.delete('/api/video/:id', protect, deleteVideo);
+    app.post('/api/video', protect, uploadVideo);          // upload a video (protected with JWT)
+    app.get('/api/videos', getAllVideos);                  // fetch all videos
+    app.get('/api/video/:id', getVideoById);               // fetch video details by :id
+    app.get('/api/videos/:channelId', getVideosByChannel); // fetch all videos of from a channel
+    app.delete('/api/video/:id', protect, deleteVideo);    // delete a video (protected with JWT)
+    app.put('/api/video/:id', protect, updateVideo);       // update a video details endpoint
 
     // Like/dislike endpoints
-    app.patch('/api/video/:id/like', protect, likeVideo);
-    app.patch('/api/video/:id/unlike', protect, unlikeVideo);
-    app.patch('/api/video/:id/dislike', protect, dislikeVideo);
-    app.patch('/api/video/:id/undislike', protect, undislikeVideo);
-
-    // Update video endpoint
-    app.put('/api/video/:id', protect, updateVideo);
+    app.patch('/api/video/:id/like', protect, likeVideo);           // like a video (protected with JWT)
+    app.patch('/api/video/:id/unlike', protect, unlikeVideo);       // unLike a video (protected with JWT)
+    app.patch('/api/video/:id/dislike', protect, dislikeVideo);     // dislike a video (protected with JWT)
+    app.patch('/api/video/:id/undislike', protect, undislikeVideo); // unDislike a video (protected with JWT)
 }
 
-export default videoRoutes;
+export default videoRoutes; // export routes

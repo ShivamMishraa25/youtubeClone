@@ -1,10 +1,14 @@
+// Controller for channel creation, fetch, update, and delete APIs
+
 import ChannelModel from '../model/channel.model.js';
 import UserModel from '../model/user.model.js';
 
+// Create a new channel (protected)
 export const createChannel = async (req, res) => {
   try {
     const { channelName, description, channelPic, channelBanner } = req.body;
 
+    // Create channel document
     const channel = await ChannelModel.create({
       channelName,
       description,
@@ -13,6 +17,7 @@ export const createChannel = async (req, res) => {
       owner: req.user.id
     });
 
+    // Link channel to user
     await UserModel.findByIdAndUpdate(req.user.id, { channel: channel._id });
 
     // Respond with channelId for frontend consistency
@@ -25,6 +30,7 @@ export const createChannel = async (req, res) => {
   }
 };
 
+// Get channel by channel ID (public)
 export const getChannelById = async (req, res) => {
   try {
     const channel = await ChannelModel.findById(req.params.id).populate('videos');
@@ -39,6 +45,7 @@ export const getChannelById = async (req, res) => {
   }
 };
 
+// Get channel by user ID (public)
 export const getChannelByUser = async (req, res) => {
   try {
     const channel = await ChannelModel.findOne({ owner: req.params.userId }).populate('videos');
@@ -52,6 +59,7 @@ export const getChannelByUser = async (req, res) => {
   }
 };
 
+// Update channel details (protected, only owner)
 export const updateChannel = async (req, res) => {
   try {
     const channel = await ChannelModel.findById(req.params.id);
@@ -69,6 +77,7 @@ export const updateChannel = async (req, res) => {
   }
 };
 
+// Delete channel (protected, only owner)
 export const deleteChannel = async (req, res) => {
   try {
     const channel = await ChannelModel.findById(req.params.id);

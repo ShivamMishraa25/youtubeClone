@@ -1,15 +1,20 @@
+// Controller for user registration, login, and profile APIs
+
 import UserModel from "../model/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
+// Helper to generate JWT token for a user
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
+// Register a new user
 export const registerUser = async (req, res) => {
     try {
         const { username, email, password, avatar } = req.body;
 
+        // Validate required fields
         if (!username) {
             res.status(400).json({ message: "Username is required." });
         }
@@ -23,7 +28,7 @@ export const registerUser = async (req, res) => {
             res.status(400).json({ message: "Avatar is required." });
         }
 
-        // Trim inputs
+        // Trim inputs and validate
         const trimmedUsername = username.trim();
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
@@ -58,6 +63,7 @@ export const registerUser = async (req, res) => {
         avatar: trimmedAvatar,
         });
 
+        // Respond with user info and JWT token
         res.status(201).json({
         _id: user._id,
         username: user.username,
@@ -73,6 +79,7 @@ export const registerUser = async (req, res) => {
     }
 };
 
+// Login user and return JWT token
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -84,16 +91,19 @@ export const loginUser = async (req, res) => {
             res.status(400).json({ message: "Password is required." });
         }
 
+        // Find user by email
         const user = await UserModel.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
+        // Compare password
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
             return res.status(401).json({ message: "Wrong password" });
         }
 
+        // Respond with user info and JWT token
         res.json({
             _id: user._id,
             username: user.username,
@@ -108,6 +118,7 @@ export const loginUser = async (req, res) => {
     }
 };
 
+// Get user profile (requires JWT)
 export const getUserProfile = async (req, res) => {
     try {
         const user = await UserModel.findById(req.user.id).populate("channel");

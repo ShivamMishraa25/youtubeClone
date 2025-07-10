@@ -1,13 +1,18 @@
+// Controller for video upload, fetch, update, like/dislike, and delete APIs
+
 import VideoModel from '../model/video.model.js';
 import ChannelModel from '../model/channel.model.js';
 import UserModel from '../model/user.model.js';
 
+// Upload a new video (protected route)
 export const uploadVideo = async (req, res) => {
   try {
     const { title, description, videoLink, thumbnail, category } = req.body;
 
+    // Find channel of logged-in user
     const channel = await ChannelModel.findOne({ owner: req.user.id });
 
+    // Create new video document
     const video = await VideoModel.create({
       title,
       description,
@@ -17,6 +22,7 @@ export const uploadVideo = async (req, res) => {
       channel: channel._id
     });
 
+    // Add video to channel's videos array
     channel.videos.push(video._id);
     await channel.save();
 
@@ -26,6 +32,7 @@ export const uploadVideo = async (req, res) => {
   }
 };
 
+// Get all videos (public)
 export const getAllVideos = async (req, res) => {
   try {
     const videos = await VideoModel.find().populate('channel');
@@ -35,6 +42,7 @@ export const getAllVideos = async (req, res) => {
   }
 };
 
+// Get video by ID (public)
 export const getVideoById = async (req, res) => {
   try {
     const video = await VideoModel.findById(req.params.id)
@@ -51,6 +59,7 @@ export const getVideoById = async (req, res) => {
   }
 };
 
+// Get all videos for a channel (public)
 export const getVideosByChannel = async (req, res) => {
   try {
     const videos = await VideoModel.find({ channel: req.params.channelId });
@@ -60,6 +69,7 @@ export const getVideosByChannel = async (req, res) => {
   }
 };
 
+// Delete a video (protected, only channel owner)
 export const deleteVideo = async (req, res) => {
   try {
     const video = await VideoModel.findById(req.params.id);
@@ -80,6 +90,7 @@ export const deleteVideo = async (req, res) => {
   }
 };
 
+// Like a video (protected)
 export const likeVideo = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -117,6 +128,7 @@ export const likeVideo = async (req, res) => {
   }
 };
 
+// Unlike a video (protected)
 export const unlikeVideo = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -144,6 +156,7 @@ export const unlikeVideo = async (req, res) => {
   }
 };
 
+// Dislike a video (protected)
 export const dislikeVideo = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -179,6 +192,7 @@ export const dislikeVideo = async (req, res) => {
   }
 };
 
+// Remove dislike from a video (protected)
 export const undislikeVideo = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -199,6 +213,7 @@ export const undislikeVideo = async (req, res) => {
   }
 };
 
+// Update video details (protected, only channel owner)
 export const updateVideo = async (req, res) => {
   try {
     const video = await VideoModel.findById(req.params.id);

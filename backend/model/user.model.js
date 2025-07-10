@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// define schema
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -19,20 +20,20 @@ const userSchema = new mongoose.Schema({
         type: String 
     },
     likedVideos: [{
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // array of video _IDs
         ref: 'Video'
     }],
     subscribedChannels: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId, // array of channel _IDs
         ref: 'Channel' 
     }],
     channel: { 
-        type: mongoose.Schema.Types.ObjectId, 
+        type: mongoose.Schema.Types.ObjectId, // channel _id
         ref: 'Channel',
         default: null
     }
-}, { timestamps: true });
+}, { timestamps: true }); // save timestamp
 
-const UserModel = mongoose.model("User", userSchema);
+const UserModel = mongoose.model("User", userSchema); // create model based on the schema
 
-export default UserModel;
+export default UserModel; // export model

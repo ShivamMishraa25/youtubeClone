@@ -4,14 +4,14 @@ import {
   getCommentsByVideo,
   deleteComment,
   editComment
-} from '../controller/comment.controller.js';
+} from '../controller/comment.controller.js'; // import controllers
 import { protect } from '../middleware/authMiddleware.js';
 
 function commentRoutes(app) {
-    app.post('/api/comment', protect, addComment);
-    app.get('/api/comment/:videoId', getCommentsByVideo);
-    app.delete('/api/comment/:id', protect, deleteComment);
-    app.patch('/api/comment/:id', protect, editComment);
+    app.post('/api/comment', protect, addComment); // add a new comment
+    app.get('/api/comment/:videoId', getCommentsByVideo); // get comments on a video by videoId
+    app.delete('/api/comment/:id', protect, deleteComment); // delete a comment (protected with JWT)
+    app.patch('/api/comment/:id', protect, editComment); // edit a comment (protected with JWT)
 }
 
-export default commentRoutes;
+export default commentRoutes; // export routes
