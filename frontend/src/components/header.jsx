@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'; // import logged in user from context
+import { useAuth } from '../contexts/AuthContext.jsx'; // import logged in user from context
 import UserModal from './UserModal.jsx' // import userModal to be called from Header
 import axios from 'axios'; // import axios for calling APIs
 import '../css/homePage.css' // import css for styling

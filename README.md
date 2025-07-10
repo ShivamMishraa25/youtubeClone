@@ -1,20 +1,21 @@
 # YouTube Clone (MERN Stack)
 
-A full-stack YouTube clone built with React, Node.js, Express, and MongoDB.  
-This project is for educational purposes and demonstrates a modern video-sharing platform with authentication, channels, video upload, comments, likes/dislikes, and responsive UI.
+A full-stack YouTube-style video-sharing app built with **React**, **Node.js**, **Express**, and **MongoDB**.  
+This project demonstrates user authentication, channel creation, video uploads, like/dislike functionality, comments, and a responsive UI — all styled to resemble the YouTube experience.
 
 ---
 
 ## Live Demo
 
-- **Deployed App:** [http://shivammishraa25.github.io/youtubeClone/](http://shivammishraa25.github.io/youtubeClone/)
+- **Deployed App:** [https://shivammishraa25.github.io/youtubeClone/](https://shivammishraa25.github.io/youtubeClone/)
+- **Deployed Backend** [https://youtube-backend-cx37.onrender.com](https://youtube-backend-cx37.onrender.com)
 - **Demo Video:** [Watch on YouTube](https://youtu.be/your-demo-video-id)
 
 ---
 
 ## Repository
 
-- **GitHub:** [https://github.com/shivammishraa25/youtubeClone](https://github.com/shivammishraa25/youtubeClone)
+- **GitHub:** [github.com/shivammishraa25/youtubeClone](https://github.com/shivammishraa25/youtubeClone)
 
 ---
 
@@ -31,15 +32,19 @@ This project is for educational purposes and demonstrates a modern video-sharing
 - **404 Page:** Custom not found page styled like YouTube.
 - **Lazy Loading:** Components are lazy-loaded for faster initial load.
 - **Custom Loading Screen:** YouTube-style loading animation for better UX.
+- **upload date** formatted with `date-fns`
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React 19, React Router v7, Axios, React Icons, Vite
-- **Backend:** Node.js, Express 5, MongoDB, Mongoose, JWT, bcrypt
-- **Styling:** Custom CSS (no frameworks)
-- **Other:** Date-fns for date formatting
+| Layer       | Tech Used                                 |
+|-------------|-------------------------------------------|
+| Frontend    | React 19, React Router v7, Axios, Vite    |
+| Backend     | Node.js, Express 5, MongoDB, Mongoose     |
+| Auth        | JWT, bcrypt                               |
+| Styling     | Custom CSS (No frameworks)                |
+| Utilities   | `date-fns` for formatting dates           |
 
 ---
 
@@ -47,17 +52,17 @@ This project is for educational purposes and demonstrates a modern video-sharing
 
 ### Prerequisites
 
-- Node.js (v18+ recommended)
-- MongoDB (local or Atlas)
-- npm
+- Node.js v18+
+- MongoDB (Atlas or local)
+- npm or yarn
 
 ---
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/youtube-clone.git
-cd youtube-clone
+git clone https://github.com/shivammishraa25/youtubeClone.git
+cd youtubeClone
 ```
 
 ---
@@ -69,20 +74,26 @@ cd backend
 npm install
 ```
 
-- Create a `.env` file in `/backend` with:
+Create a `.env` file in the `/backend` directory:
 
-  ```
-  MONGO_URI=your_mongodb_connection_string
-  JWT_SECRET=your_jwt_secret
-  ```
+```
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_super_secret_key
+```
 
-- Start the backend server:
+Seed the database with realistic dummy data:
 
-  ```bash
-  npm start
-  ```
+```bash
+node seed.js
+```
 
-  The backend runs on [http://localhost:5100](http://localhost:5100).
+Start the server:
+
+```bash
+npm start
+```
+
+Backend will run at `http://localhost:5100`
 
 ---
 
@@ -91,28 +102,22 @@ npm install
 ```bash
 cd ../frontend
 npm install
+npm run dev
 ```
 
-- Start the frontend dev server:
-
-  ```bash
-  npm run dev
-  ```
-
-  The frontend runs on [http://localhost:5173](http://localhost:5173) by default.
+Frontend will run at `http://localhost:5173`
 
 ---
 
-## Usage
+## Usage Guide
 
-- **Register** a new account or **login**.
-- **Create your channel** after logging in.
-- **Upload videos** from your channel page or the upload icon in the header.
-- **Watch videos**, like/dislike, and comment.
-- **Edit your channel** details and manage your videos.
-- **Browse other channels** and subscribe (UI only).
-- **Search** for videos by title.
-- **404 Not Found** page for invalid routes.
+1. **Register/Login** using the form. Avatar URL is optional (auto-generated if empty).
+2. **Create Your Channel** – set channel name and picture.
+3. **Upload Videos** with title, description, thumbnail URL, and category.
+4. **Browse Videos** from homepage. Filter by category or search title.
+5. **Watch Videos**, like/dislike, and **interact with comments**.
+6. **Edit/Delete** your own comments.
+7. **Navigate to Channels**, view uploaded videos.
 
 ---
 
@@ -126,7 +131,6 @@ youtubeClone/
 │   ├── model/
 │   ├── routes/
 │   ├── seed/
-│   ├── .env.example
 │   └── server.js
 ├── frontend/
 │   ├── src/
@@ -144,7 +148,7 @@ youtubeClone/
 
 ---
 
-## Notes
+## Notes & Design Decisions
 
 - **Educational Use Only:** This project is for learning and demo purposes. Do not use in production.
 - **No Video Uploads:** Videos are referenced by URL; actual file uploads are not implemented.
@@ -156,13 +160,17 @@ youtubeClone/
 
 ---
 
-## Credits
+## Author
 
-- Project by **Shivam Mishra**
-- Inspired by YouTube's UI/UX
+> Project by **Shivam Mishra**
+> Inspired by YouTube's UI/UX
+
+- GitHub: [@shivammishraa25](https://github.com/shivammishraa25)
+- Project Repo: [youtubeClone](https://github.com/shivammishraa25/youtubeClone)
 
 ---
 
 ## License
 
-This project is licensed for **educational use only.**
+This project is **open for educational purposes** only.  
+Do not use in production without security upgrades.

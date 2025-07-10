@@ -1,4 +1,3 @@
-import "./index.css";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom"; // import router provider
 import { AuthProvider } from "./contexts/AuthContext.jsx"; // import logged in user
@@ -110,7 +109,9 @@ const router = createBrowserRouter([
     ],
     errorElement: <NotFound />, // not found 404
   },
-]);
+], {
+  // basename: "/online-library-system/"
+});
 
 // Render the app with AuthProvider and router
 createRoot(document.getElementById("root")).render(
