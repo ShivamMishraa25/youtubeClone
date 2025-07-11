@@ -5,6 +5,7 @@ import UserModal from './UserModal.jsx' // import userModal to be called from He
 import axios from 'axios'; // import axios for calling APIs
 import '../css/homePage.css' // import css for styling
 import '../css/registerLogin.css'
+import '../css/createChannel.css'
 
 // import hamburger, youtube, search, upload, bell, like, dislike, icons from react-icons library
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -208,7 +209,7 @@ function Header({ sidebarOpen, setSidebarOpen, searchedVal, setSearchedVal, onSe
                         user?.channelId &&
                         <RiVideoUploadLine onClick={() => setShowUpload(true)} />
                     }
-                    <FaBell />
+                    {user && <FaBell />}
 
                     {/* if user loggedIn, show userIcon, else show SignIn and SignUp buttons */}
                     {user ? (
@@ -226,8 +227,8 @@ function Header({ sidebarOpen, setSidebarOpen, searchedVal, setSearchedVal, onSe
                         </>
                         ) : (
                         <>
-                            <Link to="/login" className="header-auth-link">Sign in</Link>
-                            <Link to="/register" className="header-auth-link signup">Sign up</Link>
+                            <Link to="/login" className="header-auth-link">Log-in</Link>
+                            <Link to="/register" className="header-auth-link signup">Register</Link>
                         </>
                     )}
                 </div>

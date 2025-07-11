@@ -9,13 +9,14 @@ This project demonstrates user authentication, channel creation, video uploads, 
 
 - **Deployed App:** [https://shivammishraa25.github.io/youtubeClone/](https://shivammishraa25.github.io/youtubeClone/)
 - **Deployed Backend** [https://youtube-backend-cx37.onrender.com](https://youtube-backend-cx37.onrender.com)
-- **Demo Video:** [Watch on YouTube](https://youtu.be/your-demo-video-id)
+- **Demo Video:** [Watch on YouTube](https://www.youtube.com/watch?v=ya7_uGjJHDY)
 
 ---
 
-## Repository
+## Repository (fullstack and backend)
 
 - **GitHub:** [github.com/shivammishraa25/youtubeClone](https://github.com/shivammishraa25/youtubeClone)
+- **Backend:** [github.com/shivammishraa25/youtube-backend](https://github.com/ShivamMishraa25/youtube-backend)
 
 ---
 

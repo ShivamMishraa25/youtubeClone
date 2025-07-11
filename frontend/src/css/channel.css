@@ -491,6 +491,8 @@
     }
     .channel-title {
         font-size: 1.3rem;
+        display: flex;
+        justify-content: center;
     }
     .channel-banner {
         height: 90px;
@@ -525,5 +527,8 @@
     }
     .channel-tabs {
         gap: 0.1rem;
+    }
+    .channel-btn {
+        font-size: revert;
     }
 }

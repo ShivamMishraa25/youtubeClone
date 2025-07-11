@@ -46,8 +46,14 @@ function VideoPlayer() {
                 setVideo(videoRes.data);
                 setLikeCount(videoRes.data.likes || 0);
                 setDislikeCount(videoRes.data.dislikes || 0);
+                // Sort comments by timestamp/createdAt descending (latest first)
+                const sortedComments = (commentRes.data || []).slice().sort((a, b) => {
+                    const aTime = new Date(a.timestamp || a.createdAt).getTime();
+                    const bTime = new Date(b.timestamp || b.createdAt).getTime();
+                    return bTime - aTime;
+                });
                 setComments(
-                    (commentRes.data || []).map(c => ({
+                    sortedComments.map(c => ({
                         _id: c._id,
                         username: c.user?.username || "Unknown",
                         avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
@@ -141,9 +147,15 @@ function VideoPlayer() {
             // Fetch updated comments from backend
             const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`); // API for fetching all comments on a video
             
+            // Sort comments by timestamp/createdAt descending (latest first)
+            const sortedComments = (res.data || []).slice().sort((a, b) => {
+                const aTime = new Date(a.timestamp || a.createdAt).getTime();
+                const bTime = new Date(b.timestamp || b.createdAt).getTime();
+                return bTime - aTime;
+            });
             // set newly fetched comments in state
             setComments(
-                (res.data || []).map(c => ({
+                sortedComments.map(c => ({
                     _id: c._id,
                     username: c.user?.username || "Unknown",
                     avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
@@ -169,8 +181,14 @@ function VideoPlayer() {
             );
             // Always fetch updated comments from backend after delete
             const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            // Sort comments by timestamp/createdAt descending (latest first)
+            const sortedComments = (res.data || []).slice().sort((a, b) => {
+                const aTime = new Date(a.timestamp || a.createdAt).getTime();
+                const bTime = new Date(b.timestamp || b.createdAt).getTime();
+                return bTime - aTime;
+            });
             setComments(
-                (res.data || []).map(c => ({
+                sortedComments.map(c => ({
                     _id: c._id,
                     username: c.user?.username || "Unknown",
                     avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
@@ -202,8 +220,14 @@ function VideoPlayer() {
             );
             // Fetch updated comments from backend
             const res = await axios.get(`http://localhost:5100/api/comment/${videoId}`);
+            // Sort comments by timestamp/createdAt descending (latest first)
+            const sortedComments = (res.data || []).slice().sort((a, b) => {
+                const aTime = new Date(a.timestamp || a.createdAt).getTime();
+                const bTime = new Date(b.timestamp || b.createdAt).getTime();
+                return bTime - aTime;
+            });
             setComments(
-                (res.data || []).map(c => ({
+                sortedComments.map(c => ({
                     _id: c._id,
                     username: c.user?.username || "Unknown",
                     avatar: c.user?.avatar || "https://placehold.co/40x40.png?text=?",
@@ -266,7 +290,7 @@ function VideoPlayer() {
                     {
 
                         // only show like/dislike buttons to 'Logged-In Users'
-                        user?.channelId&&(
+                        user && (
                             <div className="video-player-actions">
                         <button
                             className={`video-player-action-btn${liked ? ' active' : ''}`}
